@@ -58,32 +58,75 @@ body {
 }
 
 /* Магазин */
-.shop {
+.shop-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  padding: 10px 0;
+  max-width: 600px;
+  margin: 0 auto 30px;
+}
+
+.shop-card {
+  background: #1f2a34;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 230, 168, 0.3);
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-top: 1rem;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
 }
 
-.shop-btn {
-  padding: 14px 20px;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
-  font-weight: bold;
-  background: #2980b9;
-  color: white;
-  transition: background 0.2s;
-  cursor: pointer;
+.shop-card:hover:not(.disabled) {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 230, 168, 0.6);
 }
 
-.shop-btn:disabled {
-  background: #555;
+.shop-card.disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.shop-btn:hover:not(:disabled) {
-  background: #1f618d;
+.shop-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+}
+
+.shop-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #00e6a8;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.shop-cost {
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  color: #8affd1;
+}
+
+.shop-buy-btn {
+  background: #00c488;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+.shop-buy-btn:hover:not(:disabled) {
+  background: #00e6a8;
+}
+
+.shop-buy-btn:disabled {
+  background: #555;
+  cursor: not-allowed;
 }
 
 /* Статистика */
