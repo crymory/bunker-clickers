@@ -55,17 +55,6 @@ function App() {
   return (
     <div className="app">
       <h1 className="title">Bunker Clicker</h1>
-      <nav className="tabs">
-        {Object.values(TABS).map(t => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`tab ${tab === t ? 'active' : ''}`}
-          >
-            {t === 'game' ? 'Игра' : t === 'shop' ? 'Магазин' : 'Статистика'}
-          </button>
-        ))}
-      </nav>
 
       {tab === TABS.GAME && (
         <div className="game">
@@ -100,6 +89,18 @@ function App() {
           <p>Автокликер: {autoClicker ? 'Включён' : 'Выключен'}</p>
         </div>
       )}
+
+      <nav className="bottom-tabs">
+        {Object.values(TABS).map(t => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`bottom-tab ${tab === t ? 'active' : ''}`}
+          >
+            {t === 'game' ? '🎮' : t === 'shop' ? '🛒' : '📊'}
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }
