@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
 
 const TABS = {
   GAME: 'game',
@@ -17,7 +18,6 @@ function App() {
   const [clickValue, setClickValue] = useState(() => parseInt(localStorage.getItem('clickValue')) || 1);
   const [autoClicker, setAutoClicker] = useState(() => localStorage.getItem('autoClicker') === 'true');
 
-  // Автокликер
   useEffect(() => {
     let interval = null;
     if (autoClicker) {
@@ -32,18 +32,9 @@ function App() {
     return () => clearInterval(interval);
   }, [autoClicker]);
 
-  // Сохраняем капсы и клик в localStorage
-  useEffect(() => {
-    localStorage.setItem('caps', caps);
-  }, [caps]);
-
-  useEffect(() => {
-    localStorage.setItem('clickValue', clickValue);
-  }, [clickValue]);
-
-  useEffect(() => {
-    localStorage.setItem('autoClicker', autoClicker);
-  }, [autoClicker]);
+  useEffect(() => localStorage.setItem('caps', caps), [caps]);
+  useEffect(() => localStorage.setItem('clickValue', clickValue), [clickValue]);
+  useEffect(() => localStorage.setItem('autoClicker', autoClicker), [autoClicker]);
 
   function handleClick() {
     setCaps(prev => prev + clickValue);
@@ -62,23 +53,14 @@ function App() {
   }
 
   return (
-    <div style={{ maxWidth: 480, margin: 'auto', padding: 20, fontFamily: 'Segoe UI, sans-serif', color: '#fff', background: 'linear-gradient(to bottom, #0f2027, #203a43, #2c5364)', minHeight: '100vh' }}>
-      <h1 style={{ textAlign: 'center' }}>Bunker Clicker</h1>
-      <nav style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+    <div className="app">
+      <h1 className="title">Bunker Clicker</h1>
+      <nav className="tabs">
         {Object.values(TABS).map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            style={{
-              margin: '0 10px',
-              padding: '10px 15px',
-              borderRadius: 8,
-              border: 'none',
-              cursor: 'pointer',
-              backgroundColor: tab === t ? '#16a085' : '#117864',
-              color: 'white',
-              fontWeight: 'bold',
-            }}
+            className={`tab ${tab === t ? 'active' : ''}`}
           >
             {t === 'game' ? 'Игра' : t === 'shop' ? 'Магазин' : 'Статистика'}
           </button>
@@ -86,64 +68,33 @@ function App() {
       </nav>
 
       {tab === TABS.GAME && (
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 32, marginBottom: 20 }}>Капсы: {caps.toLocaleString('ru-RU')}</div>
-          <button
-            onClick={handleClick}
-            style={{
-              padding: '20px 40px',
-              fontSize: 24,
-              background: '#1abc9c',
-              border: 'none',
-              borderRadius: 12,
-              color: 'white',
-              cursor: 'pointer',
-              boxShadow: '0 6px #117864',
-              userSelect: 'none',
-            }}
-          >
-            💥 Кликни!
-          </button>
+        <div className="game">
+          <div className="counter">Капсы: {caps.toLocaleString('ru-RU')}</div>
+          <button className="click-button" onClick={handleClick}></button>
         </div>
       )}
 
       {tab === TABS.SHOP && (
-        <div>
+        <div className="shop">
           {SHOP_ITEMS.map(item => (
-            <div key={item.id} style={{ marginBottom: 15 }}>
-              <button
-                disabled={
-                  (item.id === 'clickUpgrade' && clickValue > 1) ||
-                  (item.id === 'autoClicker' && autoClicker) ||
-                  caps < item.cost
-                }
-                onClick={() => buyUpgrade(item.id)}
-                style={{
-                  width: '100%',
-                  padding: '15px',
-                  fontSize: 18,
-                  borderRadius: 12,
-                  border: 'none',
-                  backgroundColor:
-                    (item.id === 'clickUpgrade' && clickValue > 1) ||
-                    (item.id === 'autoClicker' && autoClicker)
-                      ? '#27ae60'
-                      : caps >= item.cost
-                      ? '#0984e3'
-                      : '#b2bec3',
-                  color: 'white',
-                  cursor: caps >= item.cost ? 'pointer' : 'not-allowed',
-                }}
-              >
-                {item.name} — {item.cost} капс {((item.id === 'clickUpgrade' && clickValue > 1) || (item.id === 'autoClicker' && autoClicker)) && '✅'}
-              </button>
-            </div>
+            <button
+              key={item.id}
+              onClick={() => buyUpgrade(item.id)}
+              className="shop-btn"
+              disabled={
+                (item.id === 'clickUpgrade' && clickValue > 1) ||
+                (item.id === 'autoClicker' && autoClicker) ||
+                caps < item.cost
+              }
+            >
+              {item.name} — {item.cost} капс {((item.id === 'clickUpgrade' && clickValue > 1) || (item.id === 'autoClicker' && autoClicker)) && '✅'}
+            </button>
           ))}
         </div>
       )}
 
       {tab === TABS.STATS && (
-        <div style={{ textAlign: 'center', fontSize: 18 }}>
+        <div className="stats">
           <p>Всего капс: {caps.toLocaleString('ru-RU')}</p>
           <p>Значение клика: x{clickValue}</p>
           <p>Автокликер: {autoClicker ? 'Включён' : 'Выключен'}</p>
