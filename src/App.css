@@ -17,11 +17,11 @@ body {
 }
 
 /* Заголовок */
-.title {
+/*.title {
   font-size: 2.4rem;
   margin-bottom: 1rem;
   text-shadow: 0 0 10px #0ff;
-}
+}*/
 
 /* Счётчик */
 .counter {
