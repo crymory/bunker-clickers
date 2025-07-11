@@ -40,9 +40,23 @@ function App() {
     const saved = localStorage.getItem('boostLevels');
     return saved ? JSON.parse(saved) : {};
   });
+  const [autoClickerBought, setAutoClickerBought] = useState(() => localStorage.getItem('autoClickerBought') === 'true');
   const [showBoosts, setShowBoosts] = useState(false);
   const [popups, setPopups] = useState([]);
   const popupId = useRef(0);
+
+  // Автокликер - прибавляем капсы каждые 2 секунды, если куплен
+  useEffect(() => {
+    if (!autoClickerBought) return;
+    const interval = setInterval(() => {
+      setCaps(prev => {
+        const next = prev + 1;
+        localStorage.setItem('caps', next);
+        return next;
+      });
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [autoClickerBought]);
 
   useEffect(() => {
     const regenInterval = setInterval(() => {
@@ -63,6 +77,7 @@ function App() {
   useEffect(() => localStorage.setItem('energy', energy), [energy]);
   useEffect(() => localStorage.setItem('maxEnergy', maxEnergy), [maxEnergy]);
   useEffect(() => localStorage.setItem('boostLevels', JSON.stringify(boostLevels)), [boostLevels]);
+  useEffect(() => localStorage.setItem('autoClickerBought', autoClickerBought), [autoClickerBought]);
 
   function handleClick() {
     if (energy <= 0) {
@@ -80,6 +95,20 @@ function App() {
   }
 
   function upgradeBoost(id) {
+    if (id === 'autoClicker') {
+      if (autoClickerBought) {
+        alert('Автокликер уже куплен!');
+        return;
+      }
+      if (caps < 250) {
+        alert('Недостаточно капс!');
+        return;
+      }
+      setCaps(caps - 250);
+      setAutoClickerBought(true);
+      return;
+    }
+
     const boost = BOOSTS.find(b => b.id === id);
     if (!boost) return;
 
@@ -145,6 +174,19 @@ function App() {
         {showBoosts && (
           <Modal onClose={() => setShowBoosts(false)}>
             <h2>Бусты</h2>
+            <div className="boost-card auto-clicker-card">
+              <div className="boost-emoji">🤖</div>
+              <div className="boost-name">Автокликер</div>
+              <div className="boost-level">{autoClickerBought ? 'Куплен' : 'Не куплен'}</div>
+              <button
+                disabled={autoClickerBought || caps < 250}
+                onClick={() => upgradeBoost('autoClicker')}
+                className="boost-upgrade-btn"
+              >
+                {autoClickerBought ? 'Куплен' : 'Купить (250 капс)'}
+              </button>
+            </div>
+
             {BOOSTS.map(boost => {
               const level = boostLevels[boost.id] || 0;
               const canUpgrade = caps >= boost.costs[level] && level < boost.maxLevel;
