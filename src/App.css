@@ -1,4 +1,3 @@
-/* Общий фон и текст */
 body {
   margin: 0;
   padding: 0;
@@ -9,7 +8,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Основной контейнер */
 .app {
   max-width: 500px;
   margin: auto;
@@ -18,18 +16,17 @@ body {
   position: relative;
 }
 
-/* Центр игрового экрана */
 .game {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 100px);
-  padding-top: 40px;
   position: relative;
+  overflow: hidden;
+  min-height: 100vh;
 }
 
-/* Счётчик */
 .counter {
   font-size: 2rem;
   margin-bottom: 1.5rem;
@@ -37,7 +34,6 @@ body {
   font-weight: bold;
 }
 
-/* Кнопка-кликер */
 .click-button {
   width: 150px;
   height: 150px;
@@ -48,6 +44,7 @@ body {
   cursor: pointer;
   transition: transform 0.2s ease;
   position: relative;
+  margin-bottom: 20px;
 }
 
 .click-button:active {
@@ -63,7 +60,6 @@ body {
   transform: translate(-50%, -50%);
 }
 
-/* Энергия справа сверху */
 .energy {
   position: fixed;
   top: 15px;
@@ -80,6 +76,7 @@ body {
   color: #00e6a8;
   z-index: 999;
   backdrop-filter: blur(6px);
+  user-select: none;
 }
 
 .battery-icon {
@@ -87,7 +84,6 @@ body {
   filter: drop-shadow(0 0 2px #00e6a8);
 }
 
-/* Прогресс-бар */
 .energy-bar {
   position: relative;
   flex-grow: 1;
@@ -107,132 +103,6 @@ body {
   box-shadow: 0 0 8px #00e6a8;
 }
 
-/* Магазин */
-.shop-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* было 180px */
-  gap: 12px; /* было 20px */
-  padding: 10px 0;
-  max-width: 600px;
-  margin: 0 auto 30px;
-}
-
-.shop-card {
-  padding: 14px; /* было 20px */
-  border-radius: 12px; /* чуть поменьше */
-}
-
-.shop-card:hover:not(.disabled) {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 230, 168, 0.6);
-}
-
-.shop-card.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.shop-emoji {
-  font-size: 3.5rem;
-  margin-bottom: 12px;
-}
-
-.shop-name {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #00e6a8;
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-.shop-cost {
-  font-size: 0.9rem;
-  margin-bottom: 16px;
-  color: #8affd1;
-}
-
-.shop-buy-btn {
-  background: #00c488;
-  border: none;
-  color: white;
-  font-weight: 600;
-  padding: 10px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  width: 100%;
-  transition: background 0.3s ease;
-}
-
-.shop-buy-btn:hover:not(:disabled) {
-  background: #00e6a8;
-}
-
-.shop-buy-btn:disabled {
-  background: #555;
-  cursor: not-allowed;
-}
-
-.open-shop-btn {
-  margin-top: 20px;
-  padding: 10px 24px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #00e6a8;
-  background: transparent;
-  border: 2px solid #00e6a8;
-  border-radius: 24px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  user-select: none;
-  outline: none;
-}
-
-.open-shop-btn:hover {
-  background-color: #00e6a8;
-  color: #0f2027;
-}
-
-
-/* Статистика */
-.stats {
-  font-size: 1.1rem;
-  margin-top: 2rem;
-  text-align: left;
-  line-height: 1.8;
-  padding: 0 1rem;
-}
-
-/* Нижняя панель вкладок */
-.bottom-tabs {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #1a252f;
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-  border-top: 2px solid #16a085;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-  z-index: 100;
-}
-
-.bottom-tab {
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  color: #aaa;
-  cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.bottom-tab.active {
-  color: #00ffc3;
-  text-shadow: 0 0 8px #00ffc3;
-  transform: scale(1.2);
-}
-
-/* Анимация капсов */
 .popups-container {
   position: relative;
   width: 100%;
@@ -243,7 +113,7 @@ body {
 .caps-popup {
   position: absolute;
   left: 50%;
-  bottom: 80px;
+  bottom: 180px;
   transform: translateX(-50%);
   font-size: 1.8rem;
   font-weight: 900;
@@ -265,7 +135,85 @@ body {
   }
 }
 
-/* Отключение кнопки при нуле энергии */
+.open-boosts-btn {
+  margin-top: 10px;
+  padding: 10px 24px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #00e6a8;
+  background: transparent;
+  border: 2px solid #00e6a8;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
+  outline: none;
+}
+
+.open-boosts-btn:hover {
+  background-color: #00e6a8;
+  color: #0f2027;
+}
+
+.boosts-panel {
+  margin-top: 20px;
+  background: #1f2a34;
+  padding: 20px;
+  border-radius: 16px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 12px rgba(0, 230, 168, 0.3);
+}
+
+.boost-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 15px;
+  padding: 10px 16px;
+  background: #283842;
+  border-radius: 12px;
+  user-select: none;
+}
+
+.boost-emoji {
+  font-size: 2.5rem;
+}
+
+.boost-name {
+  flex-grow: 1;
+  font-weight: 700;
+  color: #00e6a8;
+  font-size: 1.1rem;
+}
+
+.boost-level {
+  font-weight: 600;
+  color: #8affd1;
+  margin-right: 10px;
+}
+
+.boost-upgrade-btn {
+  background: #00c488;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.boost-upgrade-btn:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+.boost-upgrade-btn:hover:not(:disabled) {
+  background: #00e6a8;
+}
+
 .click-button:disabled {
   filter: grayscale(80%);
   cursor: not-allowed;
