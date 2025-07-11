@@ -15,7 +15,7 @@ function App() {
   const [autoClicker, setAutoClicker] = useState(() => localStorage.getItem('autoClicker') === 'true');
   const [energy, setEnergy] = useState(() => parseInt(localStorage.getItem('energy')) || 20);
   const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy')) || 20);
-  const [clickGain, setClickGain] = useState(null);
+  const [clickGains, setClickGains] = useState([]);
 
   useEffect(() => {
     let interval = null;
@@ -55,8 +55,14 @@ function App() {
     if (energy > 0) {
       setCaps(prev => prev + clickValue);
       setEnergy(prev => prev - 1);
-      setClickGain(`+${clickValue}`);
-      setTimeout(() => setClickGain(null), 800);
+
+      const id = Date.now() + Math.random(); // уникальный ID
+      setClickGains(prev => [...prev, { id, text: `+${clickValue}` }]);
+
+      // Удалить элемент после анимации
+      setTimeout(() => {
+        setClickGains(prev => prev.filter(g => g.id !== id));
+      }, 800);
     } else {
       alert('Недостаточно энергии!');
     }
@@ -97,7 +103,9 @@ function App() {
               disabled={energy === 0}
               title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
             ></button>
-            {clickGain && <div className="click-gain">{clickGain}</div>}
+            {clickGains.map(gain => (
+              <div key={gain.id} className="click-gain">{gain.text}</div>
+            ))}
           </div>
         </div>
       )}
