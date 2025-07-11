@@ -95,11 +95,15 @@ function App() {
       {tab === TABS.GAME && (
         <div className="game">
           <div className="counter">Капсы: {caps.toLocaleString('ru-RU')}</div>
-          <div className="energy">
-            <span className="battery-icon">🔋</span> {energy}/{maxEnergy}
-          </div>
+          <div className="top-bar">
+  <button className="boosts-toggle-button" onClick={openBoostsModal}>
+    ⚡ Бусты
+  </button>
 
-          <button className="boosts-toggle-button" onClick={openBoostsModal}>⚡ Бусты</button>
+  <div className="energy">
+    <span className="battery-icon">🔋</span> {energy}/{maxEnergy}
+  </div>
+</div>
 
           <div className="click-button-container">
             <button
