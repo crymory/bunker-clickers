@@ -91,32 +91,68 @@ function App() {
 
   return (
     <div className="app">
-      <div className="top-bar">
-        <button className="boosts-toggle-button" onClick={() => setBoostsModalOpen(true)}>
-          Бусты
-        </button>
-
-        <div className="energy" title="Энергия">
-          <span className="battery-icon">🔋</span> {energy}/{maxEnergy}
-        </div>
-      </div>
-
-      <div className="counter">Капсы: {caps.toLocaleString('ru-RU')}</div>
-
-      <div className="click-button-container">
-        <button
-          className="click-button"
-          onClick={handleClick}
-          disabled={energy === 0}
-          title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
-        >
-          💣
-        </button>
-        {clickGains.map(gain => (
-          <div key={gain.id} className="click-gain">{gain.text}</div>
+      {/* Нижняя панель вкладок */}
+      <nav className="bottom-tabs">
+        {Object.values(TABS).map(t => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`bottom-tab ${tab === t ? 'active' : ''}`}
+          >
+            {t === 'game' ? '🎮' : t === 'shop' ? '🛒' : '📊'}
+          </button>
         ))}
-      </div>
+      </nav>
 
+      {/* Контент вкладок */}
+      {tab === TABS.GAME && (
+        <>
+          <div className="top-bar">
+            <button className="boosts-toggle-button" onClick={() => setBoostsModalOpen(true)}>
+              Бусты
+            </button>
+
+            <div className="energy" title="Энергия">
+              <span className="battery-icon">🔋</span> {energy}/{maxEnergy}
+            </div>
+          </div>
+
+          <div className="counter">Капсы: {caps.toLocaleString('ru-RU')}</div>
+
+          <div className="click-button-container">
+            <button
+              className="click-button"
+              onClick={handleClick}
+              disabled={energy === 0}
+              title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
+            >
+              💣
+            </button>
+            {clickGains.map(gain => (
+              <div key={gain.id} className="click-gain">{gain.text}</div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {tab === TABS.SHOP && (
+        <div className="shop">
+          <p>Магазин будет позже :)</p>
+        </div>
+      )}
+
+      {tab === TABS.STATS && (
+        <div className="stats">
+          <p>Всего капс: {caps.toLocaleString('ru-RU')}</p>
+          <p>Значение клика: x{clickValue}</p>
+          <p>Автокликер: {autoClicker ? 'Включён' : 'Выключен'}</p>
+          <p>Энергия: {energy}/{maxEnergy}</p>
+          <p>Уровень улучшенного клика: {clickLevel}</p>
+          <p>Уровень энергии: {energyLevel}</p>
+        </div>
+      )}
+
+      {/* Модальное окно бустов */}
       {boostsModalOpen && (
         <div className="modal-overlay" onClick={() => setBoostsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -166,35 +202,6 @@ function App() {
           </div>
         </div>
       )}
-
-      {tab === TABS.SHOP && (
-        <div className="shop">
-          <p>Магазин будет позже :)</p>
-        </div>
-      )}
-
-      {tab === TABS.STATS && (
-        <div className="stats">
-          <p>Всего капс: {caps.toLocaleString('ru-RU')}</p>
-          <p>Значение клика: x{clickValue}</p>
-          <p>Автокликер: {autoClicker ? 'Включён' : 'Выключен'}</p>
-          <p>Энергия: {energy}/{maxEnergy}</p>
-          <p>Уровень улучшенного клика: {clickLevel}</p>
-          <p>Уровень энергии: {energyLevel}</p>
-        </div>
-      )}
-
-      <nav className="bottom-tabs">
-        {Object.values(TABS).map(t => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`bottom-tab ${tab === t ? 'active' : ''}`}
-          >
-            {t === 'game' ? '🎮' : t === 'shop' ? '🛒' : '📊'}
-          </button>
-        ))}
-      </nav>
     </div>
   );
 }
