@@ -10,6 +10,7 @@ const TABS = {
 const SHOP_ITEMS = [
   { id: 'clickUpgrade', name: 'Улучшить клик (x2)', cost: 100 },
   { id: 'autoClicker', name: 'Автокликер (+1 капса/2с)', cost: 250 },
+  { id: 'energyBoost', name: 'Энергия +10', cost: 150 },
 ];
 
 function App() {
@@ -17,7 +18,11 @@ function App() {
   const [caps, setCaps] = useState(() => parseInt(localStorage.getItem('caps')) || 0);
   const [clickValue, setClickValue] = useState(() => parseInt(localStorage.getItem('clickValue')) || 1);
   const [autoClicker, setAutoClicker] = useState(() => localStorage.getItem('autoClicker') === 'true');
+  const [energy, setEnergy] = useState(() => parseInt(localStorage.getItem('energy')) || 20);
+  const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy')) || 20);
+  const [animating, setAnimating] = useState(false);
 
+  // Автокликер капсов
   useEffect(() => {
     let interval = null;
     if (autoClicker) {
@@ -32,14 +37,41 @@ function App() {
     return () => clearInterval(interval);
   }, [autoClicker]);
 
+  // Автовосстановление энергии (например, +1 каждую 1 минуту)
+  useEffect(() => {
+    const regenInterval = setInterval(() => {
+      setEnergy(prev => {
+        if (prev < maxEnergy) {
+          const next = prev + 1;
+          localStorage.setItem('energy', next);
+          return next;
+        }
+        return prev;
+      });
+    }, 60000); // 60000 мс = 1 минута
+    return () => clearInterval(regenInterval);
+  }, [maxEnergy]);
+
+  // Сохраняем данные в localStorage
   useEffect(() => localStorage.setItem('caps', caps), [caps]);
   useEffect(() => localStorage.setItem('clickValue', clickValue), [clickValue]);
   useEffect(() => localStorage.setItem('autoClicker', autoClicker), [autoClicker]);
+  useEffect(() => localStorage.setItem('energy', energy), [energy]);
+  useEffect(() => localStorage.setItem('maxEnergy', maxEnergy), [maxEnergy]);
 
+  // Обработчик клика
   function handleClick() {
-    setCaps(prev => prev + clickValue);
+    if (energy > 0) {
+      setCaps(prev => prev + clickValue);
+      setEnergy(prev => prev - 1);
+      setAnimating(true);
+      setTimeout(() => setAnimating(false), 300);
+    } else {
+      alert('Недостаточно энергии!');
+    }
   }
 
+  // Покупка улучшений
   function buyUpgrade(id) {
     if (id === 'clickUpgrade' && caps >= 100 && clickValue === 1) {
       setCaps(caps - 100);
@@ -47,6 +79,10 @@ function App() {
     } else if (id === 'autoClicker' && caps >= 250 && !autoClicker) {
       setCaps(caps - 250);
       setAutoClicker(true);
+    } else if (id === 'energyBoost' && caps >= 150) {
+      setCaps(caps - 150);
+      setMaxEnergy(prev => prev + 10);
+      setEnergy(prev => prev + 10);
     } else {
       alert('Недостаточно капс или улучшение уже куплено');
     }
@@ -58,8 +94,20 @@ function App() {
 
       {tab === TABS.GAME && (
         <div className="game">
-          <div className="counter">Капсы: {caps.toLocaleString('ru-RU')}</div>
-          <button className="click-button" onClick={handleClick}></button>
+          <div className={`counter ${animating ? 'animated' : ''}`}>
+            Капсы: {caps.toLocaleString('ru-RU')}
+          </div>
+
+          <div className="energy">
+            <span className="battery-icon">🔋</span> {energy}/{maxEnergy}
+          </div>
+
+          <button
+            className="click-button"
+            onClick={handleClick}
+            disabled={energy === 0}
+            title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
+          ></button>
         </div>
       )}
 
@@ -76,7 +124,8 @@ function App() {
                 caps < item.cost
               }
             >
-              {item.name} — {item.cost} капс {((item.id === 'clickUpgrade' && clickValue > 1) || (item.id === 'autoClicker' && autoClicker)) && '✅'}
+              {item.name} — {item.cost} капс{' '}
+              {((item.id === 'clickUpgrade' && clickValue > 1) || (item.id === 'autoClicker' && autoClicker)) && '✅'}
             </button>
           ))}
         </div>
@@ -87,6 +136,7 @@ function App() {
           <p>Всего капс: {caps.toLocaleString('ru-RU')}</p>
           <p>Значение клика: x{clickValue}</p>
           <p>Автокликер: {autoClicker ? 'Включён' : 'Выключен'}</p>
+          <p>Энергия: {energy}/{maxEnergy}</p>
         </div>
       )}
 
