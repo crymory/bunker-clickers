@@ -117,7 +117,7 @@ function App() {
             </div>
           </div>
 
-          <div className="counter">Капсы: {caps.toLocaleString('ru-RU')}</div>
+          <div className="counter">{caps.toLocaleString('ru-RU')}</div>
 
           <div className="click-button-container">
             <button
