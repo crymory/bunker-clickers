@@ -164,3 +164,62 @@ body {
   cursor: not-allowed;
   box-shadow: none;
 }
+
+
+
+
+.boosts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 1rem;
+  padding: 0 1rem;
+}
+
+.boost-card {
+  background: linear-gradient(145deg, #1e2a38, #2a3b4c);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 255, 200, 0.2);
+  color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.boost-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 255, 200, 0.3);
+}
+
+.boost-card h3 {
+  margin-top: 0;
+  font-size: 1.4rem;
+  color: #00ffc3;
+}
+
+.boost-card p {
+  margin: 0.5rem 0 1rem;
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.boost-card button {
+  background-color: #00e6a8;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.boost-card button:disabled {
+  background: #555;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.boost-card button:hover:not(:disabled) {
+  background-color: #00ffc3;
+}
+
