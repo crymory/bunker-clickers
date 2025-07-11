@@ -23,10 +23,12 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: center;  /* Центрируем по горизонтали */
+  justify-content: center; /* Центрируем по вертикали */
   position: relative;
   overflow: hidden;
+
+  height: 100%; /* Занять всю высоту родителя */
 }
 
 /* Счётчик */
