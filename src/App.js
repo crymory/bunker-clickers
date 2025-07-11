@@ -5,13 +5,8 @@ const TABS = {
   GAME: 'game',
   SHOP: 'shop',
   STATS: 'stats',
+  BOOSTS: 'boosts',
 };
-
-const SHOP_ITEMS = [
-  { id: 'clickUpgrade', name: 'Улучшить клик (x2)', cost: 100 },
-  { id: 'autoClicker', name: 'Автокликер (+1 капса/2с)', cost: 250 },
-  { id: 'energyBoost', name: 'Энергия +10', cost: 150 },
-];
 
 function App() {
   const [tab, setTab] = useState(TABS.GAME);
@@ -22,7 +17,6 @@ function App() {
   const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy')) || 20);
   const [animating, setAnimating] = useState(false);
 
-  // Автокликер капсов
   useEffect(() => {
     let interval = null;
     if (autoClicker) {
@@ -37,7 +31,6 @@ function App() {
     return () => clearInterval(interval);
   }, [autoClicker]);
 
-  // Автовосстановление энергии (например, +1 каждую 1 минуту)
   useEffect(() => {
     const regenInterval = setInterval(() => {
       setEnergy(prev => {
@@ -48,18 +41,16 @@ function App() {
         }
         return prev;
       });
-    }, 60000); // 60000 мс = 1 минута
+    }, 60000);
     return () => clearInterval(regenInterval);
   }, [maxEnergy]);
 
-  // Сохраняем данные в localStorage
   useEffect(() => localStorage.setItem('caps', caps), [caps]);
   useEffect(() => localStorage.setItem('clickValue', clickValue), [clickValue]);
   useEffect(() => localStorage.setItem('autoClicker', autoClicker), [autoClicker]);
   useEffect(() => localStorage.setItem('energy', energy), [energy]);
   useEffect(() => localStorage.setItem('maxEnergy', maxEnergy), [maxEnergy]);
 
-  // Обработчик клика
   function handleClick() {
     if (energy > 0) {
       setCaps(prev => prev + clickValue);
@@ -71,7 +62,6 @@ function App() {
     }
   }
 
-  // Покупка улучшений
   function buyUpgrade(id) {
     if (id === 'clickUpgrade' && caps >= 100 && clickValue === 1) {
       setCaps(caps - 100);
@@ -111,23 +101,46 @@ function App() {
         </div>
       )}
 
+      {tab === TABS.BOOSTS && (
+        <div className="boosts">
+          <div className="boost-card">
+            <h3>Улучшенный клик</h3>
+            <p>x2 к силе клика</p>
+            <button
+              onClick={() => buyUpgrade('clickUpgrade')}
+              disabled={clickValue > 1 || caps < 100}
+            >
+              {clickValue > 1 ? 'Куплено ✅' : 'Купить за 100 капс'}
+            </button>
+          </div>
+
+          <div className="boost-card">
+            <h3>Автокликер</h3>
+            <p>+1 капса каждые 2с</p>
+            <button
+              onClick={() => buyUpgrade('autoClicker')}
+              disabled={autoClicker || caps < 250}
+            >
+              {autoClicker ? 'Куплено ✅' : 'Купить за 250 капс'}
+            </button>
+          </div>
+
+          <div className="boost-card">
+            <h3>Энергия</h3>
+            <p>+10 к максимуму энергии</p>
+            <button
+              onClick={() => buyUpgrade('energyBoost')}
+              disabled={caps < 150}
+            >
+              Купить за 150 капс
+            </button>
+          </div>
+        </div>
+      )}
+
       {tab === TABS.SHOP && (
         <div className="shop">
-          {SHOP_ITEMS.map(item => (
-            <button
-              key={item.id}
-              onClick={() => buyUpgrade(item.id)}
-              className="shop-btn"
-              disabled={
-                (item.id === 'clickUpgrade' && clickValue > 1) ||
-                (item.id === 'autoClicker' && autoClicker) ||
-                caps < item.cost
-              }
-            >
-              {item.name} — {item.cost} капс{' '}
-              {((item.id === 'clickUpgrade' && clickValue > 1) || (item.id === 'autoClicker' && autoClicker)) && '✅'}
-            </button>
-          ))}
+          <p>Магазин будет позже :)</p>
         </div>
       )}
 
@@ -147,7 +160,7 @@ function App() {
             onClick={() => setTab(t)}
             className={`bottom-tab ${tab === t ? 'active' : ''}`}
           >
-            {t === 'game' ? '🎮' : t === 'shop' ? '🛒' : '📊'}
+            {t === 'game' ? '🎮' : t === 'shop' ? '🛒' : t === 'stats' ? '📊' : '⚡'}
           </button>
         ))}
       </nav>
