@@ -131,45 +131,52 @@ function App() {
       )}
 
       {showBoostsModal && (
-        <div className="modal-overlay" onClick={closeBoostsModal}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2>Улучшения</h2>
-            <div className="boosts">
-              <div className="boost-card">
-                <h3>Улучшенный клик</h3>
-                <p>x2 к силе клика</p>
-                <button
-                  onClick={() => buyUpgrade('clickUpgrade')}
-                  disabled={clickValue > 1 || caps < 100}
-                >
-                  {clickValue > 1 ? 'Куплено ✅' : 'Купить за 100 капс'}
-                </button>
-              </div>
-              <div className="boost-card">
-                <h3>Автокликер</h3>
-                <p>+1 капса каждые 2с</p>
-                <button
-                  onClick={() => buyUpgrade('autoClicker')}
-                  disabled={autoClicker || caps < 250}
-                >
-                  {autoClicker ? 'Куплено ✅' : 'Купить за 250 капс'}
-                </button>
-              </div>
-              <div className="boost-card">
-                <h3>Энергия</h3>
-                <p>+10 к максимуму энергии</p>
-                <button
-                  onClick={() => buyUpgrade('energyBoost')}
-                  disabled={caps < 150}
-                >
-                  Купить за 150 капс
-                </button>
-              </div>
-            </div>
-            <button className="modal-close-button" onClick={closeBoostsModal}>Закрыть</button>
-          </div>
+  <div className="modal-overlay" onClick={closeBoostsModal}>
+    <div className="modal-content" onClick={e => e.stopPropagation()}>
+      <h2>Улучшения</h2>
+
+      <div className="boosts">
+        <div className="boost-card">
+          <h3>Улучшенный клик</h3>
+          <p>x2 к силе клика</p>
+          <button
+            onClick={() => buyUpgrade('clickUpgrade')}
+            disabled={clickValue > 1 || caps < 100}
+          >
+            {clickValue > 1 ? 'Куплено ✅' : 'Купить за 100 капс'}
+          </button>
         </div>
-      )}
+
+        <div className="boost-card">
+          <h3>Автокликер</h3>
+          <p>+1 капса каждые 2с</p>
+          <button
+            onClick={() => buyUpgrade('autoClicker')}
+            disabled={autoClicker || caps < 250}
+          >
+            {autoClicker ? 'Куплено ✅' : 'Купить за 250 капс'}
+          </button>
+        </div>
+
+        <div className="boost-card">
+          <h3>Энергия</h3>
+          <p>+10 к максимуму энергии</p>
+          <button
+            onClick={() => buyUpgrade('energyBoost')}
+            disabled={caps < 150}
+          >
+            Купить за 150 капс
+          </button>
+        </div>
+      </div>
+
+      <button className="modal-close-button" onClick={closeBoostsModal}>
+        Закрыть
+      </button>
+    </div>
+  </div>
+)}
+
 
       <nav className="bottom-tabs">
         {Object.values(TABS).map(t => (
