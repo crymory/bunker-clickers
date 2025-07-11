@@ -24,10 +24,18 @@ body {
   font-weight: bold;
 }
 
-.energy {
+/* Верхняя панель с энергией и кнопкой бустов */
+.top-bar {
   position: fixed;
   top: 12px;
   right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 200;
+}
+
+.energy {
   font-size: 1.2rem;
   color: #ffd700;
   background: rgba(0, 0, 0, 0.4);
@@ -37,25 +45,24 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  z-index: 200;
   user-select: none;
 }
 
+.battery-icon {
+  font-size: 1.4rem;
+}
+
 .boosts-toggle-button {
-  position: fixed;
-  top: 12px;
-  left: 16px;
   background-color: #00e6a8;
   color: #000;
   font-weight: bold;
   border: none;
   border-radius: 12px;
-  padding: 6px 12px;
+  padding: 8px 14px;
   font-size: 1rem;
   box-shadow: 0 0 12px #00ffc3aa;
   cursor: pointer;
   transition: all 0.2s ease;
-  z-index: 200;
 }
 
 .boosts-toggle-button:hover {
@@ -63,42 +70,14 @@ body {
   box-shadow: 0 0 16px #00ffc3cc;
 }
 
-.battery-icon {
-  font-size: 1.4rem;
-}
-
 .click-button-container {
   position: relative;
   display: inline-block;
 }
 
-.click-gain {
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.4rem;
-  color: #00ffc3;
-  font-weight: bold;
-  opacity: 1;
-  animation: floatUp 0.8s ease-out forwards;
-  pointer-events: none;
-}
-
-@keyframes floatUp {
-  0% {
-    transform: translate(-50%, 0);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -40px);
-    opacity: 0;
-  }
-}
-
 .click-button {
-  width: 130px;
-  height: 130px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   background: radial-gradient(circle, #27ae60 0%, #145a32 100%);
   border: 4px solid #0f0;
@@ -125,6 +104,30 @@ body {
   filter: grayscale(80%);
   cursor: not-allowed;
   box-shadow: none;
+}
+
+.click-gain {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  color: #00ffc3;
+  font-weight: bold;
+  opacity: 1;
+  animation: floatUp 0.8s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -40px);
+    opacity: 0;
+  }
 }
 
 .shop {
@@ -172,6 +175,7 @@ body {
   transform: scale(1.2);
 }
 
+/* Модальное окно бустов */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -188,10 +192,10 @@ body {
 
 .modal-content {
   background: linear-gradient(145deg, #1e2a38, #2a3b4c);
-  padding: 2rem;
-  border-radius: 20px;
-  max-width: 500px;
-  width: 100%;
+  padding: 1.5rem;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
   color: #fff;
   box-shadow: 0 0 30px rgba(0, 255, 200, 0.3);
   animation: fadeInModal 0.3s ease-out;
@@ -211,8 +215,8 @@ body {
 .modal-content h2 {
   text-align: center;
   margin-top: 0;
-  margin-bottom: 1.5rem;
-  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
   color: #00ffc3;
 }
 
@@ -223,8 +227,8 @@ body {
   color: #00ffc3;
   font-weight: bold;
   border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 1rem;
+  padding: 6px 12px;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -233,16 +237,17 @@ body {
   background: #00ffc320;
 }
 
+/* Карточки бустов внутри модалки */
 .boosts {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .boost-card {
   background: linear-gradient(145deg, #1e2a38, #2a3b4c);
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 14px;
+  padding: 16px;
   box-shadow: 0 4px 15px rgba(0, 255, 200, 0.2);
   color: #fff;
   transition: transform 0.2s ease;
@@ -255,13 +260,13 @@ body {
 
 .boost-card h3 {
   margin-top: 0;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: #00ffc3;
 }
 
 .boost-card p {
   margin: 0.5rem 0 1rem;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #ccc;
 }
 
@@ -271,7 +276,7 @@ body {
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  padding: 10px 20px;
+  padding: 10px 16px;
   cursor: pointer;
   transition: background 0.2s ease;
 }
