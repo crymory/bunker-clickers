@@ -30,55 +30,21 @@ body {
 
 /* Энергия */
 .energy {
-  position: fixed;
-  top: 12px;
-  right: 16px;
+  font-size: 1.4rem;
+  color: #ffd700;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 8px 16px;
+  border-radius: 16px;
+  box-shadow: 0 0 8px #ffd700aa;
   display: flex;
   align-items: center;
-  gap: 12px;
-  background-color: #2f3a47;
-  padding: 8px 14px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  color: #e2e8f0;
-  font-weight: 600;
-  font-size: 1rem;
-  min-width: 150px;
+  gap: 8px;
   user-select: none;
-  z-index: 200;
-}
-
-.battery-icon {
-  font-size: 1.5rem;
-  color: #6b7a8f;
   flex-shrink: 0;
 }
 
-/* Прогресс-бар контейнер */
-.energy-bar-container {
-  flex-grow: 1;
-  background-color: #40515f;
-  border-radius: 10px;
-  height: 12px;
-  overflow: hidden;
-}
-
-/* Сам прогресс-бар */
-.energy-bar-fill {
-  height: 100%;
-  background-color: #4a90e2;
-  border-radius: 10px 0 0 10px;
-  transition: width 0.3s ease;
-}
-
-/* Текст с числом */
-.energy-text {
-  min-width: 40px;
-  text-align: right;
-  color: #cbd5e1;
-  font-weight: 500;
-  user-select: none;
-}
+.battery-icon {
+  font-size: 1.6rem;
 
 /* Кнопка открыть бусты */
 .boosts-toggle-button {
