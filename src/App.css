@@ -16,22 +16,17 @@ body {
   padding: 1.5rem 1rem 4rem;
   text-align: center;
   position: relative;
-
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* на весь экран */
 }
 
 /* Центр игрового экрана */
 .game {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;   /* по горизонтали */
-  justify-content: center; /* по вертикали */
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 100px);
+  padding-top: 40px;
   position: relative;
-  overflow: hidden;
-  height: 100%;  /* чтобы занять всё доступное пространство */
 }
 
 /* Счётчик */
