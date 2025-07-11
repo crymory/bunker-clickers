@@ -101,9 +101,16 @@ function App() {
             Капсы: {caps.toLocaleString('ru-RU')}
           </div>
 
-          <div className="energy">
-            <span className="battery-icon">🔋</span> {energy}/{maxEnergy}
-          </div>
+          <div className="energy" title={`Энергия: ${energy} из ${maxEnergy}`}>
+  <span className="battery-icon">🔋</span>
+  <div className="energy-bar">
+    <div
+      className="energy-bar-fill"
+      style={{ width: `${(energy / maxEnergy) * 100}%` }}
+    ></div>
+  </div>
+  <span>{energy}/{maxEnergy}</span>
+</div>
 
           <button
             className="click-button"
