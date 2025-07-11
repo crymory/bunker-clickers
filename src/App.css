@@ -16,13 +16,6 @@ body {
   text-align: center;
 }
 
-/* Заголовок */
-.title {
-  font-size: 2.4rem;
-  margin-bottom: 1rem;
-  text-shadow: 0 0 10px #0ff;
-}
-
 /* Счётчик */
 .counter {
   font-size: 2rem;
@@ -32,6 +25,11 @@ body {
 }
 
 /* Кнопка-кликер */
+.click-button-container {
+  position: relative;
+  display: inline-block;
+}
+
 .click-button {
   width: 130px;
   height: 130px;
@@ -57,33 +55,67 @@ body {
   transform: translate(-50%, -50%);
 }
 
-/* Магазин */
+/* Анимация +N */
+.click-gain {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  color: #00ffc3;
+  font-weight: bold;
+  opacity: 1;
+  animation: floatUp 0.8s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -40px);
+    opacity: 0;
+  }
+}
+
+/* Энергия */
+.energy {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  font-size: 1.2rem;
+  color: #ffd700;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px #ffd700aa;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 200;
+  user-select: none;
+}
+
+.battery-icon {
+  font-size: 1.4rem;
+}
+
+/* Отключение кнопки при нуле энергии */
+.click-button:disabled {
+  filter: grayscale(80%);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Магазин (заглушка) */
 .shop {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 1rem;
-}
-
-.shop-btn {
-  padding: 14px 20px;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
-  font-weight: bold;
-  background: #2980b9;
-  color: white;
-  transition: background 0.2s;
-  cursor: pointer;
-}
-
-.shop-btn:disabled {
-  background: #555;
-  cursor: not-allowed;
-}
-
-.shop-btn:hover:not(:disabled) {
-  background: #1f618d;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  height: 200px;
 }
 
 /* Статистика */
@@ -125,49 +157,7 @@ body {
   transform: scale(1.2);
 }
 
-/* Анимация капсов */
-.counter.animated {
-  animation: pop 0.3s ease-in-out;
-}
-
-@keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); color: #00ffc3; }
-  100% { transform: scale(1); }
-}
-
-/* Энергия справа сверху */
-.energy {
-  position: fixed;
-  top: 12px;
-  right: 16px;
-  font-size: 1.2rem;
-  color: #ffd700;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 6px 12px;
-  border-radius: 12px;
-  box-shadow: 0 0 8px #ffd700aa;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  z-index: 200;
-  user-select: none;
-}
-
-.battery-icon {
-  font-size: 1.4rem;
-}
-
-/* Отключение кнопки при нуле энергии */
-.click-button:disabled {
-  filter: grayscale(80%);
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-
-
-
+/* Бусты — карточки */
 .boosts {
   display: flex;
   flex-direction: column;
@@ -222,4 +212,3 @@ body {
 .boost-card button:hover:not(:disabled) {
   background-color: #00ffc3;
 }
-
