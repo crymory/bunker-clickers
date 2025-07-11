@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 const TABS = {
@@ -21,21 +21,21 @@ function App() {
   const [energy, setEnergy] = useState(() => parseInt(localStorage.getItem('energy')) || 20);
   const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy')) || 20);
 
-  // Новое состояние для всплывающей анимации капсов
-  const [popupCaps, setPopupCaps] = useState(null);
+  // Для хранения массива всплывающих анимаций
+  const [popups, setPopups] = useState([]);
+  const popupId = useRef(0);
 
   useEffect(() => {
-    let interval = null;
     if (autoClicker) {
-      interval = setInterval(() => {
+      const interval = setInterval(() => {
         setCaps(prev => {
           const next = prev + 1;
           localStorage.setItem('caps', next);
           return next;
         });
       }, 2000);
+      return () => clearInterval(interval);
     }
-    return () => clearInterval(interval);
   }, [autoClicker]);
 
   useEffect(() => {
@@ -62,8 +62,14 @@ function App() {
     if (energy > 0) {
       setCaps(prev => prev + clickValue);
       setEnergy(prev => prev - 1);
-      setPopupCaps(`+${clickValue}`);
-      setTimeout(() => setPopupCaps(null), 1000);
+
+      // Добавляем всплывающий попап с уникальным id
+      const id = popupId.current++;
+      setPopups(current => [...current, { id, text: `+${clickValue}` }]);
+      // Убираем его через 700ms
+      setTimeout(() => {
+        setPopups(current => current.filter(p => p.id !== id));
+      }, 700);
     } else {
       alert('Недостаточно энергии!');
     }
@@ -106,8 +112,14 @@ function App() {
             title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
           ></button>
 
-          {/* Всплывающий текст с прибавкой */}
-          {popupCaps && <div className="caps-popup">{popupCaps}</div>}
+          {/* Рендерим все попапы */}
+          <div className="popups-container">
+            {popups.map(popup => (
+              <div key={popup.id} className="caps-popup">
+                {popup.text}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
