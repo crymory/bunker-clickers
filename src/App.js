@@ -90,40 +90,46 @@ function App() {
   return (
     <div className="app">
       {tab === TABS.GAME && (
-        <div className="game">
-          <div className="counter">
-            Капсы: {caps.toLocaleString('ru-RU')}
-          </div>
+  <div className="game">
+    {/* Счетчик, энергия, кнопка клика */}
+    <div className="counter">Капсы: {caps.toLocaleString('ru-RU')}</div>
 
-          <div className="energy" title={`Энергия: ${energy} из ${maxEnergy}`}>
-            <span className="battery-icon">🔋</span>
-            <div className="energy-bar">
-              <div
-                className="energy-bar-fill"
-                style={{ width: `${(energy / maxEnergy) * 100}%` }}
-              ></div>
-            </div>
-            <span>{energy}/{maxEnergy}</span>
-          </div>
+    <div className="energy" title={`Энергия: ${energy} из ${maxEnergy}`}>
+      <span className="battery-icon">🔋</span>
+      <div className="energy-bar">
+        <div
+          className="energy-bar-fill"
+          style={{ width: `${(energy / maxEnergy) * 100}%` }}
+        ></div>
+      </div>
+      <span>{energy}/{maxEnergy}</span>
+    </div>
 
-          <div className="button-wrapper">
-            <button
-              className="click-button"
-              onClick={handleClick}
-              disabled={energy === 0}
-              title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
-            ></button>
+    <button
+      className="click-button"
+      onClick={handleClick}
+      disabled={energy === 0}
+      title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
+    ></button>
 
-            <div className="popups-container">
-              {popups.map(popup => (
-                <div key={popup.id} className="caps-popup">
-                  {popup.text}
-                </div>
-              ))}
-            </div>
-          </div>
+    {/* Кнопка для открытия магазина */}
+    <button 
+      className="open-shop-btn"
+      onClick={() => setTab(TABS.SHOP)}
+    >
+      🛒 Магазин
+    </button>
+
+    {/* Попапы капсов */}
+    <div className="popups-container">
+      {popups.map(popup => (
+        <div key={popup.id} className="caps-popup">
+          {popup.text}
         </div>
-      )}
+      ))}
+    </div>
+  </div>
+)}
 
       {tab === TABS.SHOP && (
         <div className="shop-cards">
