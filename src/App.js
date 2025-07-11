@@ -15,7 +15,7 @@ function App() {
   const [autoClicker, setAutoClicker] = useState(() => localStorage.getItem('autoClicker') === 'true');
   const [energy, setEnergy] = useState(() => parseInt(localStorage.getItem('energy')) || 20);
   const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy')) || 20);
-  const [animating, setAnimating] = useState(false);
+  const [clickGain, setClickGain] = useState(null);
 
   useEffect(() => {
     let interval = null;
@@ -55,8 +55,8 @@ function App() {
     if (energy > 0) {
       setCaps(prev => prev + clickValue);
       setEnergy(prev => prev - 1);
-      setAnimating(true);
-      setTimeout(() => setAnimating(false), 300);
+      setClickGain(`+${clickValue}`);
+      setTimeout(() => setClickGain(null), 800);
     } else {
       alert('Недостаточно энергии!');
     }
@@ -80,11 +80,9 @@ function App() {
 
   return (
     <div className="app">
-      <h1 className="title">Bunker Clicker</h1>
-
       {tab === TABS.GAME && (
         <div className="game">
-          <div className={`counter ${animating ? 'animated' : ''}`}>
+          <div className="counter">
             Капсы: {caps.toLocaleString('ru-RU')}
           </div>
 
@@ -92,12 +90,15 @@ function App() {
             <span className="battery-icon">🔋</span> {energy}/{maxEnergy}
           </div>
 
-          <button
-            className="click-button"
-            onClick={handleClick}
-            disabled={energy === 0}
-            title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
-          ></button>
+          <div className="click-button-container">
+            <button
+              className="click-button"
+              onClick={handleClick}
+              disabled={energy === 0}
+              title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
+            ></button>
+            {clickGain && <div className="click-gain">{clickGain}</div>}
+          </div>
         </div>
       )}
 
