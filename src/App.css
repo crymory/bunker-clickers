@@ -1,3 +1,4 @@
+/* Общий фон и текст */
 body {
   margin: 0;
   padding: 0;
@@ -7,42 +8,22 @@ body {
   min-height: 100vh;
 }
 
+/* Основной контейнер */
 .app {
   max-width: 500px;
   margin: auto;
-  padding: 1.5rem;
+  padding: 1.5rem 1rem 4rem; /* доп. отступ снизу для нижней панели */
   text-align: center;
 }
 
+/* Заголовок */
 .title {
   font-size: 2.4rem;
   margin-bottom: 1rem;
   text-shadow: 0 0 10px #0ff;
 }
 
-.tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2rem;
-  gap: 1rem;
-}
-
-.tab {
-  background: #2c3e50;
-  color: #fff;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease-in-out;
-}
-
-.tab.active {
-  background: #16a085;
-  box-shadow: 0 0 12px #16a085aa;
-}
-
+/* Счётчик */
 .counter {
   font-size: 2rem;
   margin-bottom: 1.5rem;
@@ -50,6 +31,7 @@ body {
   font-weight: bold;
 }
 
+/* Кнопка-кликер */
 .click-button {
   width: 130px;
   height: 130px;
@@ -75,6 +57,7 @@ body {
   transform: translate(-50%, -50%);
 }
 
+/* Магазин */
 .shop {
   display: flex;
   flex-direction: column;
@@ -103,10 +86,41 @@ body {
   background: #1f618d;
 }
 
+/* Статистика */
 .stats {
   font-size: 1.1rem;
   margin-top: 2rem;
   text-align: left;
   line-height: 1.8;
   padding: 0 1rem;
+}
+
+/* Нижняя панель вкладок */
+.bottom-tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #1a252f;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 2px solid #16a085;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.bottom-tab {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.bottom-tab.active {
+  color: #00ffc3;
+  text-shadow: 0 0 8px #00ffc3;
+  transform: scale(1.2);
 }
