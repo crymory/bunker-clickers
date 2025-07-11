@@ -110,23 +110,16 @@ body {
 /* Магазин */
 .shop-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* было 180px */
+  gap: 12px; /* было 20px */
   padding: 10px 0;
   max-width: 600px;
   margin: 0 auto 30px;
 }
 
 .shop-card {
-  background: #1f2a34;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 230, 168, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  user-select: none;
+  padding: 14px; /* было 20px */
+  border-radius: 12px; /* чуть поменьше */
 }
 
 .shop-card:hover:not(.disabled) {
@@ -178,6 +171,27 @@ body {
   background: #555;
   cursor: not-allowed;
 }
+
+.open-shop-btn {
+  margin-top: 20px;
+  padding: 10px 24px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #00e6a8;
+  background: transparent;
+  border: 2px solid #00e6a8;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
+  outline: none;
+}
+
+.open-shop-btn:hover {
+  background-color: #00e6a8;
+  color: #0f2027;
+}
+
 
 /* Статистика */
 .stats {
