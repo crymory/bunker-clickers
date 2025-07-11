@@ -237,13 +237,15 @@ body {
 .modal-content {
   background: #1f2a34;
   border-radius: 16px;
-  padding: 24px 30px;
-  max-width: 400px;
+  padding: 20px 25px;
+  max-width: 320px; /* Меньше ширина */
   width: 90%;
   box-shadow: 0 0 20px #00e6a8aa;
   position: relative;
   color: #00e6a8;
   font-family: 'Segoe UI', sans-serif;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .modal-close-btn {
@@ -265,3 +267,11 @@ body {
 .modal-close-btn:hover {
   color: #00ffc3;
 }
+
+/* Карточка автокликера */
+.auto-clicker-card {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #00e6a8aa;
+}
+
