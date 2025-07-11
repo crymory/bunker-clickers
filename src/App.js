@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
-const TABS = {
-  GAME: 'game',
-};
-
 const BOOSTS = [
   {
     id: 'click',
@@ -12,7 +8,7 @@ const BOOSTS = [
     emoji: '🖱️',
     maxLevel: 3,
     costs: [100, 200, 400],
-    effects: [2, 3, 5], // множитель клика на уровнях
+    effects: [2, 3, 5],
   },
   {
     id: 'energy',
@@ -20,9 +16,20 @@ const BOOSTS = [
     emoji: '🔋',
     maxLevel: 3,
     costs: [150, 300, 600],
-    effects: [10, 20, 30], // прибавка к maxEnergy
+    effects: [10, 20, 30],
   },
 ];
+
+function Modal({ children, onClose }) {
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <button className="modal-close-btn" onClick={onClose} aria-label="Закрыть">&times;</button>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [caps, setCaps] = useState(() => parseInt(localStorage.getItem('caps')) || 0);
@@ -34,12 +41,9 @@ function App() {
     return saved ? JSON.parse(saved) : {};
   });
   const [showBoosts, setShowBoosts] = useState(false);
-
-  // Для всплывающих +капсов
   const [popups, setPopups] = useState([]);
   const popupId = useRef(0);
 
-  // Автовосстановление энергии (1 ед. в минуту)
   useEffect(() => {
     const regenInterval = setInterval(() => {
       setEnergy(prev => {
@@ -54,14 +58,12 @@ function App() {
     return () => clearInterval(regenInterval);
   }, [maxEnergy]);
 
-  // Сохраняем данные в localStorage
   useEffect(() => localStorage.setItem('caps', caps), [caps]);
   useEffect(() => localStorage.setItem('clickValue', clickValue), [clickValue]);
   useEffect(() => localStorage.setItem('energy', energy), [energy]);
   useEffect(() => localStorage.setItem('maxEnergy', maxEnergy), [maxEnergy]);
   useEffect(() => localStorage.setItem('boostLevels', JSON.stringify(boostLevels)), [boostLevels]);
 
-  // Обработка клика по кнопке
   function handleClick() {
     if (energy <= 0) {
       alert('Недостаточно энергии!');
@@ -70,7 +72,6 @@ function App() {
     setCaps(prev => prev + clickValue);
     setEnergy(prev => prev - 1);
 
-    // Анимация +капсов
     const id = popupId.current++;
     setPopups(current => [...current, { id, text: `+${clickValue}` }]);
     setTimeout(() => {
@@ -78,7 +79,6 @@ function App() {
     }, 700);
   }
 
-  // Прокачка бустов
   function upgradeBoost(id) {
     const boost = BOOSTS.find(b => b.id === id);
     if (!boost) return;
@@ -100,11 +100,9 @@ function App() {
       return updated;
     });
 
-    // Применяем эффекты
     if (id === 'click') {
       setClickValue(boost.effects[newLevel - 1]);
     } else if (id === 'energy') {
-      // Вычисляем прирост энергии на этом уровне относительно предыдущего
       const prevEffect = boost.effects[currentLevel - 1] || 0;
       const delta = boost.effects[newLevel - 1] - prevEffect;
       setMaxEnergy(prev => {
@@ -112,7 +110,7 @@ function App() {
         localStorage.setItem('maxEnergy', next);
         return next;
       });
-      setEnergy(prev => Math.min(prev + delta, maxEnergy + delta)); // увеличиваем текущую энергию
+      setEnergy(prev => Math.min(prev + delta, maxEnergy + delta));
     }
   }
 
@@ -142,12 +140,11 @@ function App() {
           ))}
         </div>
 
-        <button className="open-boosts-btn" onClick={() => setShowBoosts(prev => !prev)}>
-          🚀 Бусты
-        </button>
+        <button className="open-boosts-btn" onClick={() => setShowBoosts(true)}>🚀 Бусты</button>
 
         {showBoosts && (
-          <div className="boosts-panel">
+          <Modal onClose={() => setShowBoosts(false)}>
+            <h2>Бусты</h2>
             {BOOSTS.map(boost => {
               const level = boostLevels[boost.id] || 0;
               const canUpgrade = caps >= boost.costs[level] && level < boost.maxLevel;
@@ -167,7 +164,7 @@ function App() {
                 </div>
               );
             })}
-          </div>
+          </Modal>
         )}
       </div>
     </div>
