@@ -20,9 +20,10 @@ function App() {
   const [autoClicker, setAutoClicker] = useState(() => localStorage.getItem('autoClicker') === 'true');
   const [energy, setEnergy] = useState(() => parseInt(localStorage.getItem('energy')) || 20);
   const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy')) || 20);
-  const [animating, setAnimating] = useState(false);
 
-  // Автокликер капсов
+  // Новое состояние для всплывающей анимации капсов
+  const [popupCaps, setPopupCaps] = useState(null);
+
   useEffect(() => {
     let interval = null;
     if (autoClicker) {
@@ -37,7 +38,6 @@ function App() {
     return () => clearInterval(interval);
   }, [autoClicker]);
 
-  // Автовосстановление энергии (например, +1 каждую 1 минуту)
   useEffect(() => {
     const regenInterval = setInterval(() => {
       setEnergy(prev => {
@@ -48,30 +48,27 @@ function App() {
         }
         return prev;
       });
-    }, 60000); // 60000 мс = 1 минута
+    }, 60000);
     return () => clearInterval(regenInterval);
   }, [maxEnergy]);
 
-  // Сохраняем данные в localStorage
   useEffect(() => localStorage.setItem('caps', caps), [caps]);
   useEffect(() => localStorage.setItem('clickValue', clickValue), [clickValue]);
   useEffect(() => localStorage.setItem('autoClicker', autoClicker), [autoClicker]);
   useEffect(() => localStorage.setItem('energy', energy), [energy]);
   useEffect(() => localStorage.setItem('maxEnergy', maxEnergy), [maxEnergy]);
 
-  // Обработчик клика
   function handleClick() {
     if (energy > 0) {
       setCaps(prev => prev + clickValue);
       setEnergy(prev => prev - 1);
-      setAnimating(true);
-      setTimeout(() => setAnimating(false), 300);
+      setPopupCaps(`+${clickValue}`);
+      setTimeout(() => setPopupCaps(null), 1000);
     } else {
       alert('Недостаточно энергии!');
     }
   }
 
-  // Покупка улучшений
   function buyUpgrade(id) {
     if (id === 'clickUpgrade' && caps >= 100 && clickValue === 1) {
       setCaps(caps - 100);
@@ -94,7 +91,7 @@ function App() {
 
       {tab === TABS.GAME && (
         <div className="game">
-          <div className={`counter ${animating ? 'animated' : ''}`}>
+          <div className="counter">
             Капсы: {caps.toLocaleString('ru-RU')}
           </div>
 
@@ -108,6 +105,9 @@ function App() {
             disabled={energy === 0}
             title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
           ></button>
+
+          {/* Всплывающий текст с прибавкой */}
+          {popupCaps && <div className="caps-popup">{popupCaps}</div>}
         </div>
       )}
 
