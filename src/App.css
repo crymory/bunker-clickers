@@ -16,6 +16,10 @@ body {
   padding: 1.5rem 1rem 4rem;
   text-align: center;
   position: relative;
+
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* на весь экран */
 }
 
 /* Центр игрового экрана */
@@ -23,12 +27,11 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;  /* Центрируем по горизонтали */
-  justify-content: center; /* Центрируем по вертикали */
+  align-items: center;   /* по горизонтали */
+  justify-content: center; /* по вертикали */
   position: relative;
   overflow: hidden;
-
-  height: 100%; /* Занять всю высоту родителя */
+  height: 100%;  /* чтобы занять всё доступное пространство */
 }
 
 /* Счётчик */
