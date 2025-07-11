@@ -1,5 +1,6 @@
 /* App.css */
 
+/* Основной сброс и фон */
 body {
   margin: 0;
   padding: 0;
@@ -9,60 +10,57 @@ body {
   min-height: 100vh;
 }
 
+/* Основной контейнер, адаптивно */
 .app {
-  max-width: 500px;
-  margin: auto;
+  max-width: 400px;
+  margin: 0 auto;
   padding: 1.5rem 1rem 4rem;
   text-align: center;
-  position: relative;
+  box-sizing: border-box;
 }
 
-.counter {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #00e6a8;
-  font-weight: bold;
-}
-
-/* Верхняя панель с энергией и кнопкой бустов */
+/* Верхняя панель (энергия и кнопка бустов) — статичная внутри контента */
 .top-bar {
-  position: fixed;
-  top: 12px;
-  right: 16px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  z-index: 200;
+  margin-bottom: 1rem;
+  gap: 8px;
 }
 
+/* Энергия */
 .energy {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: #ffd700;
   background: rgba(0, 0, 0, 0.4);
-  padding: 6px 12px;
-  border-radius: 12px;
+  padding: 8px 16px;
+  border-radius: 16px;
   box-shadow: 0 0 8px #ffd700aa;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .battery-icon {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
 }
 
+/* Кнопка открыть бусты */
 .boosts-toggle-button {
   background-color: #00e6a8;
   color: #000;
   font-weight: bold;
   border: none;
-  border-radius: 12px;
-  padding: 8px 14px;
-  font-size: 1rem;
+  border-radius: 16px;
+  padding: 8px 20px;
+  font-size: 1.1rem;
   box-shadow: 0 0 12px #00ffc3aa;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .boosts-toggle-button:hover {
@@ -70,14 +68,26 @@ body {
   box-shadow: 0 0 16px #00ffc3cc;
 }
 
+/* Счётчик */
+.counter {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  color: #00e6a8;
+  font-weight: bold;
+}
+
+/* Кнопка клика */
 .click-button-container {
   position: relative;
   display: inline-block;
+  margin-bottom: 2rem;
+  width: 180px;
+  height: 180px;
 }
 
 .click-button {
-  width: 180px;
-  height: 180px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   background: radial-gradient(circle, #27ae60 0%, #145a32 100%);
   border: 4px solid #0f0;
@@ -85,19 +95,16 @@ body {
   cursor: pointer;
   transition: transform 0.2s ease;
   position: relative;
+  font-size: 3rem;
+  line-height: 180px;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .click-button:active {
   transform: scale(0.95);
-}
-
-.click-button::after {
-  content: "💣";
-  font-size: 3rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .click-button:disabled {
@@ -111,12 +118,13 @@ body {
   top: -20px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: #00ffc3;
   font-weight: bold;
   opacity: 1;
   animation: floatUp 0.8s ease-out forwards;
   pointer-events: none;
+  user-select: none;
 }
 
 @keyframes floatUp {
@@ -130,22 +138,141 @@ body {
   }
 }
 
-.shop {
+/* Модальное окно бустов */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 15, 15, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
-  height: 200px;
+  z-index: 500;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
+.modal-content {
+  background: linear-gradient(145deg, #1e2a38, #2a3b4c);
+  padding: 1.2rem 1.5rem;
+  border-radius: 16px;
+  max-width: 360px;
+  width: 100%;
+  color: #fff;
+  box-shadow: 0 0 30px rgba(0, 255, 200, 0.3);
+  animation: fadeInModal 0.3s ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes fadeInModal {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: #00ffc3;
+  user-select: none;
+}
+
+.modal-close-button {
+  margin-top: 1rem;
+  background: transparent;
+  border: 2px solid #00ffc3;
+  color: #00ffc3;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  width: 100%;
+  user-select: none;
+}
+
+.modal-close-button:hover {
+  background: #00ffc320;
+}
+
+/* Карточки бустов */
+.boosts {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  user-select: none;
+}
+
+.boost-card {
+  background: linear-gradient(145deg, #1e2a38, #2a3b4c);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 4px 15px rgba(0, 255, 200, 0.2);
+  color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.boost-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 255, 200, 0.3);
+}
+
+.boost-card h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #00ffc3;
+}
+
+.boost-card p {
+  margin: 0.3rem 0 0.8rem;
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.boost-card button {
+  background-color: #00e6a8;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  width: 100%;
+}
+
+.boost-card button:disabled {
+  background: #555;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.boost-card button:hover:not(:disabled) {
+  background-color: #00ffc3;
+}
+
+/* Статистика */
 .stats {
   font-size: 1.1rem;
   margin-top: 2rem;
   text-align: left;
   line-height: 1.8;
   padding: 0 1rem;
+  user-select: none;
 }
 
+/* Нижняя панель */
 .bottom-tabs {
   position: fixed;
   bottom: 0;
@@ -173,120 +300,4 @@ body {
   color: #00ffc3;
   text-shadow: 0 0 8px #00ffc3;
   transform: scale(1.2);
-}
-
-/* Модальное окно бустов */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(15, 15, 15, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 500;
-  padding: 1rem;
-}
-
-.modal-content {
-  background: linear-gradient(145deg, #1e2a38, #2a3b4c);
-  padding: 1.5rem;
-  border-radius: 16px;
-  max-width: 400px;
-  width: 90%;
-  color: #fff;
-  box-shadow: 0 0 30px rgba(0, 255, 200, 0.3);
-  animation: fadeInModal 0.3s ease-out;
-}
-
-@keyframes fadeInModal {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.modal-content h2 {
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1.4rem;
-  color: #00ffc3;
-}
-
-.modal-close-button {
-  margin-top: 1rem;
-  background: transparent;
-  border: 2px solid #00ffc3;
-  color: #00ffc3;
-  font-weight: bold;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.modal-close-button:hover {
-  background: #00ffc320;
-}
-
-/* Карточки бустов внутри модалки */
-.boosts {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.boost-card {
-  background: linear-gradient(145deg, #1e2a38, #2a3b4c);
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 4px 15px rgba(0, 255, 200, 0.2);
-  color: #fff;
-  transition: transform 0.2s ease;
-}
-
-.boost-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0, 255, 200, 0.3);
-}
-
-.boost-card h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  color: #00ffc3;
-}
-
-.boost-card p {
-  margin: 0.5rem 0 1rem;
-  font-size: 0.95rem;
-  color: #ccc;
-}
-
-.boost-card button {
-  background-color: #00e6a8;
-  color: #000;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.boost-card button:disabled {
-  background: #555;
-  color: #aaa;
-  cursor: not-allowed;
-}
-
-.boost-card button:hover:not(:disabled) {
-  background-color: #00ffc3;
 }
