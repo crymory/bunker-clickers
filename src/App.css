@@ -124,3 +124,43 @@ body {
   text-shadow: 0 0 8px #00ffc3;
   transform: scale(1.2);
 }
+
+/* Анимация капсов */
+.counter.animated {
+  animation: pop 0.3s ease-in-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); color: #00ffc3; }
+  100% { transform: scale(1); }
+}
+
+/* Энергия справа сверху */
+.energy {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  font-size: 1.2rem;
+  color: #ffd700;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px #ffd700aa;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 200;
+  user-select: none;
+}
+
+.battery-icon {
+  font-size: 1.4rem;
+}
+
+/* Отключение кнопки при нуле энергии */
+.click-button:disabled {
+  filter: grayscale(80%);
+  cursor: not-allowed;
+  box-shadow: none;
+}
