@@ -1,24 +1,32 @@
-/* Убираем скролл, фиксируем фон */
-html, body {
+/* Общий фон и текст */
+body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  overflow: hidden;
-  font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+  font-family: 'Segoe UI', sans-serif;
   color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* Основной контейнер */
 .app {
   max-width: 500px;
-  height: 100%;
   margin: auto;
+  padding: 1.5rem 1rem 4rem;
   text-align: center;
+  position: relative;
+}
+
+/* Центр игрового экрана */
+.game {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 100px);
+  padding-top: 40px;
   position: relative;
-  overflow: hidden;
 }
 
 /* Счётчик */
@@ -29,21 +37,10 @@ html, body {
   font-weight: bold;
 }
 
-/* Вкладка игры */
-.game {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
 /* Кнопка-кликер */
 .click-button {
-  width: 130px;
-  height: 130px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   background: radial-gradient(circle, #27ae60 0%, #145a32 100%);
   border: 4px solid #0f0;
@@ -59,25 +56,18 @@ html, body {
 
 .click-button::after {
   content: "💣";
-  font-size: 3rem;
+  font-size: 3.2rem;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-/* Отключение кнопки при нуле энергии */
-.click-button:disabled {
-  filter: grayscale(80%);
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* Энергия в правом верхнем углу */
+/* Энергия справа сверху */
 .energy {
-  position: absolute;
+  position: fixed;
   top: 15px;
-  right: 20px;
+  right: 15px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -88,8 +78,8 @@ html, body {
   font-weight: 700;
   font-size: 1rem;
   color: #00e6a8;
-  user-select: none;
-  width: 140px;
+  z-index: 999;
+  backdrop-filter: blur(6px);
 }
 
 .battery-icon {
@@ -97,10 +87,12 @@ html, body {
   filter: drop-shadow(0 0 2px #00e6a8);
 }
 
+/* Прогресс-бар */
 .energy-bar {
   position: relative;
   flex-grow: 1;
-  height: 12px;
+  width: 60px;
+  height: 10px;
   background: rgba(0, 230, 168, 0.25);
   border-radius: 10px;
   overflow: hidden;
@@ -113,39 +105,6 @@ html, body {
   border-radius: 10px 0 0 10px;
   transition: width 0.4s ease-in-out;
   box-shadow: 0 0 8px #00e6a8;
-}
-
-/* Анимация капсов */
-.popups-container {
-  position: relative;
-  width: 100%;
-  height: 0;
-  pointer-events: none;
-}
-
-.caps-popup {
-  position: absolute;
-  left: 50%;
-  bottom: 60px;
-  transform: translateX(-50%);
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: #00e6a8;
-  text-shadow: 0 0 8px #00e6a8;
-  user-select: none;
-  animation: popupMove 0.7s forwards;
-  z-index: 150;
-}
-
-@keyframes popupMove {
-  0% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-40px) scale(1.3);
-  }
 }
 
 /* Магазин */
@@ -257,4 +216,44 @@ html, body {
   color: #00ffc3;
   text-shadow: 0 0 8px #00ffc3;
   transform: scale(1.2);
+}
+
+/* Анимация капсов */
+.popups-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+}
+
+.caps-popup {
+  position: absolute;
+  left: 50%;
+  bottom: 80px;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #00e6a8;
+  text-shadow: 0 0 8px #00e6a8;
+  user-select: none;
+  animation: popupMove 0.7s forwards;
+  z-index: 150;
+}
+
+@keyframes popupMove {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-40px) scale(1.3);
+  }
+}
+
+/* Отключение кнопки при нуле энергии */
+.click-button:disabled {
+  filter: grayscale(80%);
+  cursor: not-allowed;
+  box-shadow: none;
 }
