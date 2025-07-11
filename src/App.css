@@ -210,7 +210,7 @@ body {
 .boosts {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   padding-bottom: 1rem;
 }
 
@@ -218,82 +218,74 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #1b2a38, #263545);
-  border-radius: 16px;
-  padding: 14px 16px;
-  box-shadow: 0 4px 15px rgba(0, 255, 200, 0.15);
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  position: relative;
-  transition: all 0.25s ease;
-  overflow: hidden;
+  background: #2f3a47;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-.boost-card::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  z-index: -1;
-  background: linear-gradient(135deg, #00ffc3, #007d88);
-  border-radius: inherit;
+.boost-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.45);
+  transform: translateY(-3px);
 }
 
 .boost-icon {
-  width: 48px;
-  height: 48px;
-  background: rgba(0, 255, 200, 0.1);
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  background-color: #40515f;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
-  color: #00ffc3;
-  margin-right: 14px;
+  font-size: 1.5rem;
+  color: #a0aec0; /* мягкий серый */
   flex-shrink: 0;
+  margin-right: 16px;
+  user-select: none;
 }
 
 .boost-info {
   flex-grow: 1;
   text-align: left;
-  color: #fff;
+  color: #e2e8f0; /* светло-серый текст */
 }
 
 .boost-info h4 {
   margin: 0;
-  font-size: 1.1rem;
-  color: #00ffc3;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f7fafc; /* чуть светлее */
 }
 
 .boost-info p {
   margin: 4px 0 0;
   font-size: 0.95rem;
-  color: #ccc;
+  color: #cbd5e1; /* нейтральный серый */
 }
 
 .boost-card button {
-  background-color: #00e6a8;
-  color: #000;
-  font-weight: bold;
+  background-color: #4a90e2; /* спокойный синий */
+  color: white;
+  font-weight: 600;
   border: none;
-  border-radius: 10px;
-  padding: 8px 14px;
+  border-radius: 8px;
+  padding: 8px 18px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color 0.25s ease;
   font-size: 0.95rem;
   flex-shrink: 0;
-}
-
-.boost-card button:disabled {
-  background: #444;
-  color: #aaa;
-  cursor: not-allowed;
+  user-select: none;
 }
 
 .boost-card button:hover:not(:disabled) {
-  background-color: #00ffc3;
+  background-color: #357ABD;
+}
+
+.boost-card button:disabled {
+  background-color: #6b7a8f;
+  cursor: not-allowed;
+  color: #a0aec0;
 }
 
 /* Статистика */
