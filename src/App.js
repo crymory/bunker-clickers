@@ -11,59 +11,54 @@ function App() {
   const [tab, setTab] = useState(TABS.GAME);
   const [user, setUser] = useState(null);
 
-  // Игровые стейты
-  const [caps, setCaps] = useState(() => parseInt(localStorage.getItem('caps')) || 0);
-  const [clickValue, setClickValue] = useState(() => parseInt(localStorage.getItem('clickValue')) || 1);
+  const [caps, setCaps] = useState(() => parseInt(localStorage.getItem('caps') || '0'));
+  const [clickValue, setClickValue] = useState(() => parseInt(localStorage.getItem('clickValue') || '1'));
   const [autoClicker, setAutoClicker] = useState(() => localStorage.getItem('autoClicker') === 'true');
-  const [energy, setEnergy] = useState(() => parseInt(localStorage.getItem('energy')) || 20);
-  const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy')) || 20);
-  const [clickLevel, setClickLevel] = useState(() => parseInt(localStorage.getItem('clickLevel')) || 1);
-  const [energyLevel, setEnergyLevel] = useState(() => parseInt(localStorage.getItem('energyLevel')) || 1);
+  const [energy, setEnergy] = useState(() => parseInt(localStorage.getItem('energy') || '20'));
+  const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy') || '20'));
+  const [clickLevel, setClickLevel] = useState(() => parseInt(localStorage.getItem('clickLevel') || '1'));
+  const [energyLevel, setEnergyLevel] = useState(() => parseInt(localStorage.getItem('energyLevel') || '1'));
   const [clickGains, setClickGains] = useState([]);
   const [boostsModalOpen, setBoostsModalOpen] = useState(false);
 
   useEffect(() => {
-    function initTelegram() {
-      const tg = window.Telegram?.WebApp;
-      console.log('Telegram WebApp object:', tg);
-      if (tg) {
-        console.log('initDataUnsafe:', tg.initDataUnsafe);
-        if (tg.initDataUnsafe?.user) {
-          setUser(tg.initDataUnsafe.user);
-          console.log('User loaded:', tg.initDataUnsafe.user);
-        } else {
-          setUser(null);
-          console.warn('User data not found in initDataUnsafe');
-        }
-        tg.ready();
+    const tg = (window as any).Telegram?.WebApp;
+
+    if (tg) {
+      tg.ready();
+
+      if (tg.initDataUnsafe?.user) {
+        setUser(tg.initDataUnsafe.user);
+        console.log('Telegram user:', tg.initDataUnsafe.user);
       } else {
-        setUser(null);
-        console.warn('Telegram WebApp API not found');
+        console.warn('User not found in initDataUnsafe');
+      }
+
+      // Доп. пример: можно слушать изменения темы
+      tg.onEvent?.('themeChanged', () => {
+        document.body.setAttribute('data-theme', tg.themeParams?.theme || 'default');
+      });
+    } else {
+      console.warn('Telegram API не найден');
+
+      // В DEV-режиме подставляем фейкового пользователя
+      if (process.env.NODE_ENV === 'development') {
+        setUser({
+          id: 1,
+          first_name: 'DevUser',
+          username: 'dev',
+          photo_url: 'https://via.placeholder.com/100',
+        });
       }
     }
-
-    initTelegram();
-
-    // Подписка на событие 'auth' (если оно поддерживается) для обновления данных
-    if (window.Telegram?.WebApp?.onEvent) {
-      window.Telegram.WebApp.onEvent('auth', initTelegram);
-    }
-
-    // Очистка подписки при размонтировании
-    return () => {
-      if (window.Telegram?.WebApp?.offEvent) {
-        window.Telegram.WebApp.offEvent('auth', initTelegram);
-      }
-    };
   }, []);
 
-  // Автокликер
   useEffect(() => {
     if (autoClicker) {
       const interval = setInterval(() => {
         setCaps(prev => {
           const next = prev + 1;
-          localStorage.setItem('caps', next);
+          localStorage.setItem('caps', String(next));
           return next;
         });
       }, 2000);
@@ -71,13 +66,12 @@ function App() {
     }
   }, [autoClicker]);
 
-  // Регенирация энергии
   useEffect(() => {
     const regenInterval = setInterval(() => {
       setEnergy(prev => {
         if (prev < maxEnergy) {
           const next = prev + 1;
-          localStorage.setItem('energy', next);
+          localStorage.setItem('energy', String(next));
           return next;
         }
         return prev;
@@ -86,14 +80,13 @@ function App() {
     return () => clearInterval(regenInterval);
   }, [maxEnergy]);
 
-  // Сохраняем стейты в localStorage
-  useEffect(() => localStorage.setItem('caps', caps), [caps]);
-  useEffect(() => localStorage.setItem('clickValue', clickValue), [clickValue]);
-  useEffect(() => localStorage.setItem('autoClicker', autoClicker), [autoClicker]);
-  useEffect(() => localStorage.setItem('energy', energy), [energy]);
-  useEffect(() => localStorage.setItem('maxEnergy', maxEnergy), [maxEnergy]);
-  useEffect(() => localStorage.setItem('clickLevel', clickLevel), [clickLevel]);
-  useEffect(() => localStorage.setItem('energyLevel', energyLevel), [energyLevel]);
+  useEffect(() => localStorage.setItem('caps', String(caps)), [caps]);
+  useEffect(() => localStorage.setItem('clickValue', String(clickValue)), [clickValue]);
+  useEffect(() => localStorage.setItem('autoClicker', String(autoClicker)), [autoClicker]);
+  useEffect(() => localStorage.setItem('energy', String(energy)), [energy]);
+  useEffect(() => localStorage.setItem('maxEnergy', String(maxEnergy)), [maxEnergy]);
+  useEffect(() => localStorage.setItem('clickLevel', String(clickLevel)), [clickLevel]);
+  useEffect(() => localStorage.setItem('energyLevel', String(energyLevel)), [energyLevel]);
 
   function handleClick() {
     if (energy > 0) {
@@ -110,7 +103,7 @@ function App() {
     }
   }
 
-  function buyUpgrade(id) {
+  function buyUpgrade(id: string) {
     if (id === 'clickUpgrade' && caps >= 100 * clickLevel) {
       setCaps(caps - 100 * clickLevel);
       setClickValue(prev => prev + 1);
@@ -130,9 +123,9 @@ function App() {
 
   if (!user) {
     return (
-      <div className="app" style={{padding: '2rem', textAlign: 'center'}}>
-        <p style={{color: '#f33', fontWeight: 'bold'}}>
-          Пожалуйста, откройте игру через Telegram WebApp для сохранения прогресса.
+      <div className="app" style={{ padding: '2rem', textAlign: 'center' }}>
+        <p style={{ color: '#f33', fontWeight: 'bold' }}>
+          Пожалуйста, откройте игру через Telegram WebApp.
         </p>
       </div>
     );
@@ -140,7 +133,7 @@ function App() {
 
   return (
     <div className="app">
-      {/* Нижняя панель вкладок */}
+      {/* Вкладки */}
       <nav className="bottom-tabs">
         {Object.values(TABS).map(t => (
           <button
@@ -153,10 +146,17 @@ function App() {
         ))}
       </nav>
 
-      {/* Контент вкладок */}
+      {/* Контент */}
       {tab === TABS.GAME && (
         <>
           <div className="top-bar">
+            <div className="user-chip">
+              {user.photo_url && (
+                <img className="avatar" src={user.photo_url} alt="avatar" />
+              )}
+              <span>{user.first_name}</span>
+            </div>
+
             <button className="boosts-toggle-button" onClick={() => setBoostsModalOpen(true)}>
               Бусты
             </button>
@@ -196,12 +196,11 @@ function App() {
           <p>Значение клика: x{clickValue}</p>
           <p>Автокликер: {autoClicker ? 'Включён' : 'Выключен'}</p>
           <p>Энергия: {energy}/{maxEnergy}</p>
-          <p>Уровень улучшенного клика: {clickLevel}</p>
+          <p>Уровень клика: {clickLevel}</p>
           <p>Уровень энергии: {energyLevel}</p>
         </div>
       )}
 
-      {/* Модальное окно бустов */}
       {boostsModalOpen && (
         <div className="modal-overlay" onClick={() => setBoostsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -226,7 +225,7 @@ function App() {
                 <div className="boost-icon">🤖</div>
                 <div className="boost-info">
                   <h4>Автокликер</h4>
-                  <p>+1 капса каждые 2 секунды</p>
+                  <p>+1 капс каждые 2 секунды</p>
                 </div>
                 <button
                   onClick={() => buyUpgrade('autoClicker')}
