@@ -124,24 +124,38 @@ function App() {
       )}
 
       {tab === TABS.SHOP && (
-        <div className="shop">
-          {SHOP_ITEMS.map(item => (
-            <button
-              key={item.id}
-              onClick={() => buyUpgrade(item.id)}
-              className="shop-btn"
-              disabled={
-                (item.id === 'clickUpgrade' && clickValue > 1) ||
-                (item.id === 'autoClicker' && autoClicker) ||
-                caps < item.cost
-              }
-            >
-              {item.name} — {item.cost} капс{' '}
-              {((item.id === 'clickUpgrade' && clickValue > 1) || (item.id === 'autoClicker' && autoClicker)) && '✅'}
-            </button>
-          ))}
+  <div className="shop-cards">
+    {SHOP_ITEMS.map(item => {
+      // Проверка доступности покупки и состояние кнопки
+      const disabled =
+        (item.id === 'clickUpgrade' && clickValue > 1) ||
+        (item.id === 'autoClicker' && autoClicker) ||
+        caps < item.cost;
+
+      // Эмодзи для предметов по id
+      const emojiMap = {
+        clickUpgrade: '🖱️',
+        autoClicker: '🤖',
+        energyBoost: '🔋',
+      };
+
+      return (
+        <div key={item.id} className={`shop-card ${disabled ? 'disabled' : ''}`}>
+          <div className="shop-emoji">{emojiMap[item.id] || '❓'}</div>
+          <div className="shop-name">{item.name}</div>
+          <div className="shop-cost">{item.cost} капс</div>
+          <button
+            onClick={() => buyUpgrade(item.id)}
+            disabled={disabled}
+            className="shop-buy-btn"
+          >
+            {disabled ? 'Куплено / Недоступно' : 'Купить'}
+          </button>
         </div>
-      )}
+      );
+    })}
+  </div>
+)}
 
       {tab === TABS.STATS && (
         <div className="stats">
