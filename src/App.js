@@ -93,7 +93,7 @@ function App() {
 
   return (
     <div className="app">
-      // <h1 className="title">Bunker Clicker</h1>
+    {/*<h1 className="title">Bunker Clicker</h1>*/}
 
       {tab === TABS.GAME && (
         <div className="game">
