@@ -1,277 +1,783 @@
-body {
+/* Общие стили */
+* {
   margin: 0;
   padding: 0;
-  background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
-  font-family: 'Segoe UI', sans-serif;
-  color: #fff;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', 'Arial', sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #ffffff;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-.app {
-  max-width: 500px;
-  margin: auto;
-  padding: 1.5rem 1rem 4rem;
-  text-align: center;
-  position: relative;
+.bunker-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.game {
+/* Заголовок */
+.bunker-header {
+  background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #e53e3e;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.bunker-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bunker-icon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 8px #e53e3e);
+}
+
+.bunker-title h1 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #e53e3e;
+  text-shadow: 0 0 10px rgba(229, 62, 62, 0.5);
+}
+
+.bunker-title p {
+  font-size: 0.9rem;
+  color: #a0aec0;
+  margin-top: 0.2rem;
+}
+
+.resource-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.resource-count {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(229, 62, 62, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(229, 62, 62, 0.3);
+}
+
+.resource-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 5px #e53e3e);
+}
+
+.resource-number {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #e53e3e;
+}
+
+.storage-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.storage-bar {
+  width: 100px;
+  height: 8px;
+  background: rgba(160, 174, 192, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.storage-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e53e3e, #c53030);
+  transition: width 0.3s ease;
+}
+
+.storage-text {
+  font-size: 0.8rem;
+  color: #a0aec0;
+}
+
+/* Панель энергии */
+.energy-panel {
+  background: rgba(45, 55, 72, 0.8);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(160, 174, 192, 0.2);
+}
+
+.energy-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   flex: 1;
+}
+
+.energy-icon {
+  font-size: 1.8rem;
+  filter: drop-shadow(0 0 5px #fbbf24);
+}
+
+.energy-details {
+  flex: 1;
+}
+
+.energy-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(251, 191, 36, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.3rem;
+}
+
+.energy-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  transition: width 0.5s ease;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.energy-text {
+  font-size: 0.9rem;
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+.energy-regen {
+  font-size: 0.8rem;
+  color: #68d391;
+  background: rgba(104, 211, 145, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid rgba(104, 211, 145, 0.3);
+}
+
+/* Основная игровая зона */
+.game-area {
+  flex: 1;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mining-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Визуализация бункера */
+.bunker-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bunker-entrance {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 15px #e53e3e);
+  animation: pulse 2s infinite;
+}
+
+.bunker-structure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bunker-level {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bunker-room {
+  font-size: 2rem;
+  padding: 0.5rem;
+  background: rgba(45, 55, 72, 0.6);
+  border-radius: 8px;
+  border: 2px solid rgba(160, 174, 192, 0.3);
+  filter: drop-shadow(0 0 5px rgba(160, 174, 192, 0.2));
+}
+
+/* Элементы управления добычей */
+.mining-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.mining-button {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+  border: 4px solid #e53e3e;
+  cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4);
   position: relative;
   overflow: hidden;
-  min-height: 100vh;
 }
 
-.counter {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #00e6a8;
-  font-weight: bold;
+.mining-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.5s ease;
+  opacity: 0;
 }
 
-.click-button {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #27ae60 0%, #145a32 100%);
-  border: 4px solid #0f0;
-  box-shadow: 0 0 20px #0f08, inset 0 0 10px #0f0;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  position: relative;
-  margin-bottom: 20px;
+.mining-button:hover::before {
+  opacity: 1;
+  animation: shine 0.5s ease-in-out;
 }
 
-.click-button:active {
+.mining-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(229, 62, 62, 0.6);
+}
+
+.mining-button:active {
   transform: scale(0.95);
 }
 
-.click-button::after {
-  content: "💣";
-  font-size: 3.2rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.energy {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(0, 230, 168, 0.15);
-  padding: 6px 14px;
-  border-radius: 24px;
-  box-shadow: 0 0 10px rgba(0, 230, 168, 0.4);
-  font-weight: 700;
-  font-size: 1rem;
-  color: #00e6a8;
-  z-index: 999;
-  backdrop-filter: blur(6px);
-  user-select: none;
-}
-
-.battery-icon {
-  font-size: 1.6rem;
-  filter: drop-shadow(0 0 2px #00e6a8);
-}
-
-.energy-bar {
-  position: relative;
-  flex-grow: 1;
-  width: 60px;
-  height: 10px;
-  background: rgba(0, 230, 168, 0.25);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: inset 0 0 4px rgba(0, 230, 168, 0.7);
-}
-
-.energy-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #00e6a8, #00c488);
-  border-radius: 10px 0 0 10px;
-  transition: width 0.4s ease-in-out;
-  box-shadow: 0 0 8px #00e6a8;
-}
-
-.popups-container {
-  position: relative;
-  width: 100%;
-  height: 0;
-  pointer-events: none;
-}
-
-.caps-popup {
-  position: absolute;
-  left: 50%;
-  bottom: 180px;
-  transform: translateX(-50%);
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: #00e6a8;
-  text-shadow: 0 0 8px #00e6a8;
-  user-select: none;
-  animation: popupMove 0.7s forwards;
-  z-index: 150;
-}
-
-@keyframes popupMove {
-  0% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-40px) scale(1.3);
-  }
-}
-
-.open-boosts-btn {
-  margin-top: 10px;
-  padding: 10px 24px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #00e6a8;
-  background: transparent;
-  border: 2px solid #00e6a8;
-  border-radius: 24px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  user-select: none;
-  outline: none;
-}
-
-.open-boosts-btn:hover {
-  background-color: #00e6a8;
-  color: #0f2027;
-}
-
-.boosts-panel {
-  margin-top: 20px;
-  background: #1f2a34;
-  padding: 20px;
-  border-radius: 16px;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 4px 12px rgba(0, 230, 168, 0.3);
-}
-
-.boost-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 15px;
-  padding: 10px 16px;
-  background: #283842;
-  border-radius: 12px;
-  user-select: none;
-}
-
-.boost-emoji {
-  font-size: 2.5rem;
-}
-
-.boost-name {
-  flex-grow: 1;
-  font-weight: 700;
-  color: #00e6a8;
-  font-size: 1.1rem;
-}
-
-.boost-level {
-  font-weight: 600;
-  color: #8affd1;
-  margin-right: 10px;
-}
-
-.boost-upgrade-btn {
-  background: #00c488;
-  border: none;
-  color: white;
-  font-weight: 600;
-  padding: 6px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.boost-upgrade-btn:disabled {
-  background: #555;
-  cursor: not-allowed;
-}
-
-.boost-upgrade-btn:hover:not(:disabled) {
-  background: #00e6a8;
-}
-
-.click-button:disabled {
-  filter: grayscale(80%);
+.mining-button.disabled {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  border-color: #4a5568;
   cursor: not-allowed;
   box-shadow: none;
 }
 
+.mining-button.disabled:hover {
+  transform: none;
+}
 
+.mining-icon {
+  font-size: 3.5rem;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+.mining-text {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.mining-power {
+  font-size: 0.9rem;
+  color: #fed7d7;
+  font-weight: 600;
+}
+
+.mining-status {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(45, 55, 72, 0.8);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(160, 174, 192, 0.2);
+  min-width: 80px;
+}
+
+.status-icon {
+  font-size: 1.5rem;
+}
+
+.status-label {
+  font-size: 0.8rem;
+  color: #a0aec0;
+}
+
+.status-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e53e3e;
+}
+
+/* Кнопки управления */
+.control-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.control-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.upgrades-btn {
+  background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+  color: white;
+}
+
+.upgrades-btn:hover {
+  background: linear-gradient(135deg, #2c5282 0%, #2a4365 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(49, 130, 206, 0.4);
+}
+
+.rooms-btn {
+  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+  color: white;
+}
+
+.rooms-btn:hover {
+  background: linear-gradient(135deg, #2f855a 0%, #276749 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 161, 105, 0.4);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+
+/* Всплывающие уведомления */
+.popups-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(45, 55, 72, 0.95);
+  color: #ffffff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  animation: popup-appear 0.3s ease-out;
+  border: 2px solid;
+  backdrop-filter: blur(10px);
+}
+
+.popup-success {
+  border-color: #68d391;
+  background: rgba(104, 211, 145, 0.15);
+  color: #68d391;
+}
+
+.popup-error {
+  border-color: #fc8181;
+  background: rgba(252, 129, 129, 0.15);
+  color: #fc8181;
+}
+
+.popup-warning {
+  border-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+/* Модальные окна */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(15, 32, 39, 0.85);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 2000;
+  align-items: center;
+  z-index: 1000;
+  animation: modal-fade-in 0.3s ease-out;
 }
 
 .modal-content {
-  background: #1f2a34;
-  border-radius: 16px;
-  padding: 20px 25px;
-  max-width: 320px; /* Меньше ширина */
+  background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 600px;
   width: 90%;
-  box-shadow: 0 0 20px #00e6a8aa;
-  position: relative;
-  color: #00e6a8;
-  font-family: 'Segoe UI', sans-serif;
   max-height: 80vh;
   overflow-y: auto;
+  position: relative;
+  border: 3px solid rgba(160, 174, 192, 0.3);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  animation: modal-slide-in 0.3s ease-out;
 }
 
 .modal-close-btn {
   position: absolute;
-  top: 10px;
-  right: 14px;
-  font-size: 2rem;
+  top: 1rem;
+  right: 1rem;
   background: none;
   border: none;
-  color: #00e6a8;
+  font-size: 2rem;
+  color: #a0aec0;
   cursor: pointer;
-  font-weight: bold;
-  line-height: 1;
-  padding: 0;
-  user-select: none;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-close-btn:hover {
-  color: #00ffc3;
+  color: #e53e3e;
+  background: rgba(229, 62, 62, 0.1);
 }
 
-/* Карточка автокликера */
-.auto-clicker-card {
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #00e6a8aa;
+.modal-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #e53e3e;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(229, 62, 62, 0.3);
 }
 
+/* Список улучшений */
+.upgrades-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.upgrade-card {
+  background: rgba(45, 55, 72, 0.6);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid rgba(160, 174, 192, 0.2);
+  transition: all 0.3s ease;
+}
+
+.upgrade-card:hover {
+  border-color: rgba(160, 174, 192, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.upgrade-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.upgrade-emoji {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 8px rgba(160, 174, 192, 0.3));
+}
+
+.upgrade-info {
+  flex: 1;
+}
+
+.upgrade-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e53e3e;
+  margin-bottom: 0.3rem;
+}
+
+.upgrade-desc {
+  color: #a0aec0;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.upgrade-level {
+  font-size: 0.8rem;
+  color: #68d391;
+  font-weight: 600;
+}
+
+.upgrade-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.upgrade-btn.available {
+  background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(49, 130, 206, 0.3);
+}
+
+.upgrade-btn.available:hover {
+  background: linear-gradient(135deg, #2c5282 0%, #2a4365 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(49, 130, 206, 0.4);
+}
+
+.upgrade-btn.unavailable {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  color: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* Список комнат */
+.rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.room-card {
+  background: rgba(45, 55, 72, 0.6);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid rgba(160, 174, 192, 0.2);
+  transition: all 0.3s ease;
+}
+
+.room-card:hover {
+  border-color: rgba(160, 174, 192, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.room-card.built {
+  border-color: rgba(104, 211, 145, 0.5);
+  background: rgba(104, 211, 145, 0.1);
+}
+
+.room-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.room-emoji {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 8px rgba(160, 174, 192, 0.3));
+}
+
+.room-info {
+  flex: 1;
+}
+
+.room-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e53e3e;
+  margin-bottom: 0.3rem;
+}
+
+.room-desc {
+  color: #a0aec0;
+  font-size: 0.9rem;
+}
+
+.room-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.room-btn.available {
+  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(56, 161, 105, 0.3);
+}
+
+.room-btn.available:hover {
+  background: linear-gradient(135deg, #2f855a 0%, #276749 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 161, 105, 0.4);
+}
+
+.room-btn.unavailable {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.room-btn.built {
+  background: linear-gradient(135deg, #68d391 0%, #48bb78 100%);
+  color: white;
+  cursor: default;
+}
+
+/* Анимации */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+@keyframes popup-appear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes modal-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes modal-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .bunker-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .mining-button {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .mining-icon {
+    font-size: 2.5rem;
+  }
+  
+  .mining-text {
+    font-size: 1rem;
+  }
+  
+  .mining-status {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .control-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .control-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+  
+  .upgrade-card,
+  .room-card {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .upgrade-btn,
+  .room-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .bunker-title h1 {
+    font-size: 1.5rem;
+  }
+  
+  .resource-number {
+    font-size: 1.2rem;
+  }
+  
+  .mining-button {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .mining-icon {
+    font-size: 2rem;
+  }
+  
+  .bunker-room {
+    font-size: 1.5rem;
+    padding: 0.3rem;
+  }
+  
+  .game-area {
+    padding: 1rem;
+  }
+}
