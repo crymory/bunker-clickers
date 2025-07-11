@@ -159,39 +159,49 @@ function App() {
             <h2>Бусты</h2>
 
             <div className="boosts">
-              <div className="boost-card">
-                <h3>Улучшенный клик</h3>
-                <p>Уровень: {clickLevel} | +{clickLevel} к клику</p>
-                <button
-                  onClick={() => buyUpgrade('clickUpgrade')}
-                  disabled={caps < 100 * clickLevel}
-                >
-                  Купить за {100 * clickLevel} капс
-                </button>
-              </div>
+  <div className="boost-card">
+    <div className="boost-icon">💥</div>
+    <div className="boost-info">
+      <h4>Улучшенный клик</h4>
+      <p>Ур. {clickLevel} — +{clickLevel} к клику</p>
+    </div>
+    <button
+      onClick={() => buyUpgrade('clickUpgrade')}
+      disabled={caps < 100 * clickLevel}
+    >
+      {100 * clickLevel} капс
+    </button>
+  </div>
 
-              <div className="boost-card">
-                <h3>Автокликер</h3>
-                <p>+1 капса каждые 2 секунды</p>
-                <button
-                  onClick={() => buyUpgrade('autoClicker')}
-                  disabled={autoClicker || caps < 250}
-                >
-                  {autoClicker ? 'Куплено ✅' : 'Купить за 250 капс'}
-                </button>
-              </div>
+  <div className="boost-card">
+    <div className="boost-icon">🤖</div>
+    <div className="boost-info">
+      <h4>Автокликер</h4>
+      <p>+1 капса / 2с</p>
+    </div>
+    <button
+      onClick={() => buyUpgrade('autoClicker')}
+      disabled={autoClicker || caps < 250}
+    >
+      {autoClicker ? 'Куплено ✅' : '250 капс'}
+    </button>
+  </div>
 
-              <div className="boost-card">
-                <h3>Энергия</h3>
-                <p>Уровень: {energyLevel} | +{energyLevel * 10} к максимуму энергии</p>
-                <button
-                  onClick={() => buyUpgrade('energyBoost')}
-                  disabled={caps < 150 * energyLevel}
-                >
-                  Купить за {150 * energyLevel} капс
-                </button>
-              </div>
-            </div>
+  <div className="boost-card">
+    <div className="boost-icon">⚡</div>
+    <div className="boost-info">
+      <h4>Энергия</h4>
+      <p>Ур. {energyLevel} — +{energyLevel * 10} к макс.</p>
+    </div>
+    <button
+      onClick={() => buyUpgrade('energyBoost')}
+      disabled={caps < 150 * energyLevel}
+    >
+      {150 * energyLevel} капс
+    </button>
+  </div>
+</div>
+
 
             <button
               className="modal-close-button"
