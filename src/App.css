@@ -1,38 +1,112 @@
-.App {
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 500px;
+  margin: auto;
+  padding: 1.5rem;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.title {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px #0ff;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.tab {
+  background: #2c3e50;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.tab.active {
+  background: #16a085;
+  box-shadow: 0 0 12px #16a085aa;
+}
+
+.counter {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #00e6a8;
+  font-weight: bold;
+}
+
+.click-button {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #27ae60 0%, #145a32 100%);
+  border: 4px solid #0f0;
+  box-shadow: 0 0 20px #0f08, inset 0 0 10px #0f0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.click-button:active {
+  transform: scale(0.95);
+}
+
+.click-button::after {
+  content: "💣";
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.shop {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 15px;
+  margin-top: 1rem;
+}
+
+.shop-btn {
+  padding: 14px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  background: #2980b9;
   color: white;
+  transition: background 0.2s;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+.shop-btn:disabled {
+  background: #555;
+  cursor: not-allowed;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.shop-btn:hover:not(:disabled) {
+  background: #1f618d;
+}
+
+.stats {
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  text-align: left;
+  line-height: 1.8;
+  padding: 0 1rem;
 }
