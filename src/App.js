@@ -112,10 +112,18 @@ function App() {
               Бусты
             </button>
 
-            <div className="energy" title="Энергия">
-              <span className="battery-icon">🔋</span> {energy}/{maxEnergy}
-            </div>
-          </div>
+            <div className="energy" title={`Энергия: ${energy} / ${maxEnergy}`}>
+  <span className="battery-icon">🔋</span>
+
+  <div className="energy-bar-container" aria-label="Прогресс энергии">
+    <div
+      className="energy-bar-fill"
+      style={{ width: `${(energy / maxEnergy) * 100}%` }}
+    />
+  </div>
+
+  <span className="energy-text">{energy} / {maxEnergy}</span>
+</div>
 
           <div className="counter">Капсы: {caps.toLocaleString('ru-RU')}</div>
 
