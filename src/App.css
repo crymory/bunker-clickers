@@ -211,32 +211,65 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  user-select: none;
+  padding-bottom: 1rem;
 }
 
 .boost-card {
-  background: linear-gradient(145deg, #1e2a38, #2a3b4c);
-  border-radius: 14px;
-  padding: 14px;
-  box-shadow: 0 4px 15px rgba(0, 255, 200, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #1b2a38, #263545);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 15px rgba(0, 255, 200, 0.15);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+.boost-card::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  z-index: -1;
+  background: linear-gradient(135deg, #00ffc3, #007d88);
+  border-radius: inherit;
+}
+
+.boost-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 255, 200, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: #00ffc3;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.boost-info {
+  flex-grow: 1;
+  text-align: left;
   color: #fff;
-  transition: transform 0.2s ease;
 }
 
-.boost-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(0, 255, 200, 0.3);
-}
-
-.boost-card h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
+.boost-info h4 {
+  margin: 0;
+  font-size: 1.1rem;
   color: #00ffc3;
 }
 
-.boost-card p {
-  margin: 0.3rem 0 0.8rem;
-  font-size: 1rem;
+.boost-info p {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
   color: #ccc;
 }
 
@@ -246,14 +279,15 @@ body {
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  padding: 10px 16px;
+  padding: 8px 14px;
   cursor: pointer;
   transition: background 0.2s ease;
-  width: 100%;
+  font-size: 0.95rem;
+  flex-shrink: 0;
 }
 
 .boost-card button:disabled {
-  background: #555;
+  background: #444;
   color: #aaa;
   cursor: not-allowed;
 }
