@@ -1,4 +1,5 @@
-/* Общий фон и текст */
+/* App.css */
+
 body {
   margin: 0;
   padding: 0;
@@ -8,15 +9,13 @@ body {
   min-height: 100vh;
 }
 
-/* Основной контейнер */
 .app {
   max-width: 500px;
   margin: auto;
-  padding: 1.5rem 1rem 4rem; /* доп. отступ снизу для нижней панели */
+  padding: 1.5rem 1rem 4rem;
   text-align: center;
 }
 
-/* Счётчик */
 .counter {
   font-size: 2rem;
   margin-bottom: 1.5rem;
@@ -24,7 +23,27 @@ body {
   font-weight: bold;
 }
 
-/* Кнопка-кликер */
+.energy {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  font-size: 1.2rem;
+  color: #ffd700;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px #ffd700aa;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 200;
+  user-select: none;
+}
+
+.battery-icon {
+  font-size: 1.4rem;
+}
+
 .click-button-container {
   position: relative;
   display: inline-block;
@@ -79,61 +98,12 @@ body {
   transform: translate(-50%, -50%);
 }
 
-/* Анимация +N */
-.click-gain {
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.4rem;
-  color: #00ffc3;
-  font-weight: bold;
-  opacity: 1;
-  animation: floatUp 0.8s ease-out forwards;
-  pointer-events: none;
-}
-
-@keyframes floatUp {
-  0% {
-    transform: translate(-50%, 0);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -40px);
-    opacity: 0;
-  }
-}
-
-/* Энергия */
-.energy {
-  position: fixed;
-  top: 12px;
-  right: 16px;
-  font-size: 1.2rem;
-  color: #ffd700;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 6px 12px;
-  border-radius: 12px;
-  box-shadow: 0 0 8px #ffd700aa;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  z-index: 200;
-  user-select: none;
-}
-
-.battery-icon {
-  font-size: 1.4rem;
-}
-
-/* Отключение кнопки при нуле энергии */
 .click-button:disabled {
   filter: grayscale(80%);
   cursor: not-allowed;
   box-shadow: none;
 }
 
-/* Магазин (заглушка) */
 .shop {
   display: flex;
   justify-content: center;
@@ -142,7 +112,6 @@ body {
   height: 200px;
 }
 
-/* Статистика */
 .stats {
   font-size: 1.1rem;
   margin-top: 2rem;
@@ -151,7 +120,6 @@ body {
   padding: 0 1rem;
 }
 
-/* Нижняя панель вкладок */
 .bottom-tabs {
   position: fixed;
   bottom: 0;
@@ -181,13 +149,92 @@ body {
   transform: scale(1.2);
 }
 
-/* Бусты — карточки */
+/* Boosts toggle button */
+.boosts-toggle-button {
+  margin-bottom: 1.5rem;
+  background-color: #00e6a8;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 1.1rem;
+  box-shadow: 0 0 12px #00ffc3aa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.boosts-toggle-button:hover {
+  background-color: #00ffc3;
+  box-shadow: 0 0 16px #00ffc3cc;
+}
+
+/* Modal styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 15, 15, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 500;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #1e2a38, #2a3b4c);
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 100%;
+  color: #fff;
+  box-shadow: 0 0 30px rgba(0, 255, 200, 0.3);
+  animation: fadeInModal 0.3s ease-out;
+}
+
+@keyframes fadeInModal {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  color: #00ffc3;
+}
+
+.modal-close-button {
+  margin-top: 1rem;
+  background: transparent;
+  border: 2px solid #00ffc3;
+  color: #00ffc3;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modal-close-button:hover {
+  background: #00ffc320;
+}
+
 .boosts {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-top: 1rem;
-  padding: 0 1rem;
 }
 
 .boost-card {
