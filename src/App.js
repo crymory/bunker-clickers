@@ -21,7 +21,6 @@ function App() {
   const [energy, setEnergy] = useState(() => parseInt(localStorage.getItem('energy')) || 20);
   const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy')) || 20);
 
-  // Для хранения массива всплывающих анимаций
   const [popups, setPopups] = useState([]);
   const popupId = useRef(0);
 
@@ -62,11 +61,8 @@ function App() {
     if (energy > 0) {
       setCaps(prev => prev + clickValue);
       setEnergy(prev => prev - 1);
-
-      // Добавляем всплывающий попап с уникальным id
       const id = popupId.current++;
       setPopups(current => [...current, { id, text: `+${clickValue}` }]);
-      // Убираем его через 700ms
       setTimeout(() => {
         setPopups(current => current.filter(p => p.id !== id));
       }, 700);
@@ -93,8 +89,6 @@ function App() {
 
   return (
     <div className="app">
-    {/*<h1 className="title">Bunker Clicker</h1>*/}
-
       {tab === TABS.GAME && (
         <div className="game">
           <div className="counter">
@@ -102,67 +96,66 @@ function App() {
           </div>
 
           <div className="energy" title={`Энергия: ${energy} из ${maxEnergy}`}>
-  <span className="battery-icon">🔋</span>
-  <div className="energy-bar">
-    <div
-      className="energy-bar-fill"
-      style={{ width: `${(energy / maxEnergy) * 100}%` }}
-    ></div>
-  </div>
-  <span>{energy}/{maxEnergy}</span>
-</div>
+            <span className="battery-icon">🔋</span>
+            <div className="energy-bar">
+              <div
+                className="energy-bar-fill"
+                style={{ width: `${(energy / maxEnergy) * 100}%` }}
+              ></div>
+            </div>
+            <span>{energy}/{maxEnergy}</span>
+          </div>
 
-          <button
-            className="click-button"
-            onClick={handleClick}
-            disabled={energy === 0}
-            title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
-          ></button>
+          <div className="button-wrapper">
+            <button
+              className="click-button"
+              onClick={handleClick}
+              disabled={energy === 0}
+              title={energy === 0 ? 'Недостаточно энергии' : 'Кликни!'}
+            ></button>
 
-          {/* Рендерим все попапы */}
-          <div className="popups-container">
-            {popups.map(popup => (
-              <div key={popup.id} className="caps-popup">
-                {popup.text}
-              </div>
-            ))}
+            <div className="popups-container">
+              {popups.map(popup => (
+                <div key={popup.id} className="caps-popup">
+                  {popup.text}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
 
       {tab === TABS.SHOP && (
-  <div className="shop-cards">
-    {SHOP_ITEMS.map(item => {
-      // Проверка доступности покупки и состояние кнопки
-      const disabled =
-        (item.id === 'clickUpgrade' && clickValue > 1) ||
-        (item.id === 'autoClicker' && autoClicker) ||
-        caps < item.cost;
+        <div className="shop-cards">
+          {SHOP_ITEMS.map(item => {
+            const disabled =
+              (item.id === 'clickUpgrade' && clickValue > 1) ||
+              (item.id === 'autoClicker' && autoClicker) ||
+              caps < item.cost;
 
-      // Эмодзи для предметов по id
-      const emojiMap = {
-        clickUpgrade: '🖱️',
-        autoClicker: '🤖',
-        energyBoost: '🔋',
-      };
+            const emojiMap = {
+              clickUpgrade: '🖱️',
+              autoClicker: '🤖',
+              energyBoost: '🔋',
+            };
 
-      return (
-        <div key={item.id} className={`shop-card ${disabled ? 'disabled' : ''}`}>
-          <div className="shop-emoji">{emojiMap[item.id] || '❓'}</div>
-          <div className="shop-name">{item.name}</div>
-          <div className="shop-cost">{item.cost} капс</div>
-          <button
-            onClick={() => buyUpgrade(item.id)}
-            disabled={disabled}
-            className="shop-buy-btn"
-          >
-            {disabled ? 'Куплено / Недоступно' : 'Купить'}
-          </button>
+            return (
+              <div key={item.id} className={`shop-card ${disabled ? 'disabled' : ''}`}>
+                <div className="shop-emoji">{emojiMap[item.id] || '❓'}</div>
+                <div className="shop-name">{item.name}</div>
+                <div className="shop-cost">{item.cost} капс</div>
+                <button
+                  onClick={() => buyUpgrade(item.id)}
+                  disabled={disabled}
+                  className="shop-buy-btn"
+                >
+                  {disabled ? 'Куплено / Недоступно' : 'Купить'}
+                </button>
+              </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>
-)}
+      )}
 
       {tab === TABS.STATS && (
         <div className="stats">
