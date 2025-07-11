@@ -8,114 +8,92 @@ const TABS = {
 };
 
 function App() {
-  const [user, setUser] = useState(null); // профиль Telegram
   const [tab, setTab] = useState(TABS.GAME);
-  const [caps, setCaps] = useState(0);
-  const [clickValue, setClickValue] = useState(1);
-  const [autoClicker, setAutoClicker] = useState(false);
-  const [energy, setEnergy] = useState(20);
-  const [maxEnergy, setMaxEnergy] = useState(20);
-  const [clickLevel, setClickLevel] = useState(1);
-  const [energyLevel, setEnergyLevel] = useState(1);
+  const [user, setUser] = useState(null);
 
+  // Игровые стейты
+  const [caps, setCaps] = useState(() => parseInt(localStorage.getItem('caps')) || 0);
+  const [clickValue, setClickValue] = useState(() => parseInt(localStorage.getItem('clickValue')) || 1);
+  const [autoClicker, setAutoClicker] = useState(() => localStorage.getItem('autoClicker') === 'true');
+  const [energy, setEnergy] = useState(() => parseInt(localStorage.getItem('energy')) || 20);
+  const [maxEnergy, setMaxEnergy] = useState(() => parseInt(localStorage.getItem('maxEnergy')) || 20);
+  const [clickLevel, setClickLevel] = useState(() => parseInt(localStorage.getItem('clickLevel')) || 1);
+  const [energyLevel, setEnergyLevel] = useState(() => parseInt(localStorage.getItem('energyLevel')) || 1);
   const [clickGains, setClickGains] = useState([]);
   const [boostsModalOpen, setBoostsModalOpen] = useState(false);
 
-  // Ключи localStorage будут с userId, чтобы разделять данные разных пользователей
-  const getStorageKey = (key) => {
-    if (user?.id) return `${key}_${user.id}`;
-    return `guest_${key}`;
-  };
-
-  // Загрузка данных из localStorage при загрузке user
   useEffect(() => {
-    if (!user) return;
+    function initTelegram() {
+      const tg = window.Telegram?.WebApp;
+      console.log('Telegram WebApp object:', tg);
+      if (tg) {
+        console.log('initDataUnsafe:', tg.initDataUnsafe);
+        if (tg.initDataUnsafe?.user) {
+          setUser(tg.initDataUnsafe.user);
+          console.log('User loaded:', tg.initDataUnsafe.user);
+        } else {
+          setUser(null);
+          console.warn('User data not found in initDataUnsafe');
+        }
+        tg.ready();
+      } else {
+        setUser(null);
+        console.warn('Telegram WebApp API not found');
+      }
+    }
 
-    setCaps(parseInt(localStorage.getItem(getStorageKey('caps'))) || 0);
-    setClickValue(parseInt(localStorage.getItem(getStorageKey('clickValue'))) || 1);
-    setAutoClicker(localStorage.getItem(getStorageKey('autoClicker')) === 'true');
-    setEnergy(parseInt(localStorage.getItem(getStorageKey('energy'))) || 20);
-    setMaxEnergy(parseInt(localStorage.getItem(getStorageKey('maxEnergy'))) || 20);
-    setClickLevel(parseInt(localStorage.getItem(getStorageKey('clickLevel'))) || 1);
-    setEnergyLevel(parseInt(localStorage.getItem(getStorageKey('energyLevel'))) || 1);
-  }, [user]);
+    initTelegram();
 
-  // Сохранение данных при изменении
-  useEffect(() => {
-    if (!user) return;
+    // Подписка на событие 'auth' (если оно поддерживается) для обновления данных
+    if (window.Telegram?.WebApp?.onEvent) {
+      window.Telegram.WebApp.onEvent('auth', initTelegram);
+    }
 
-    localStorage.setItem(getStorageKey('caps'), caps);
-  }, [caps, user]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    localStorage.setItem(getStorageKey('clickValue'), clickValue);
-  }, [clickValue, user]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    localStorage.setItem(getStorageKey('autoClicker'), autoClicker);
-  }, [autoClicker, user]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    localStorage.setItem(getStorageKey('energy'), energy);
-  }, [energy, user]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    localStorage.setItem(getStorageKey('maxEnergy'), maxEnergy);
-  }, [maxEnergy, user]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    localStorage.setItem(getStorageKey('clickLevel'), clickLevel);
-  }, [clickLevel, user]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    localStorage.setItem(getStorageKey('energyLevel'), energyLevel);
-  }, [energyLevel, user]);
+    // Очистка подписки при размонтировании
+    return () => {
+      if (window.Telegram?.WebApp?.offEvent) {
+        window.Telegram.WebApp.offEvent('auth', initTelegram);
+      }
+    };
+  }, []);
 
   // Автокликер
   useEffect(() => {
-    if (!user || !autoClicker) return;
-    const interval = setInterval(() => {
-      setCaps(prev => prev + 1);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [autoClicker, user]);
+    if (autoClicker) {
+      const interval = setInterval(() => {
+        setCaps(prev => {
+          const next = prev + 1;
+          localStorage.setItem('caps', next);
+          return next;
+        });
+      }, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [autoClicker]);
 
-  // Регенерация энергии
+  // Регенирация энергии
   useEffect(() => {
-    if (!user) return;
     const regenInterval = setInterval(() => {
       setEnergy(prev => {
-        if (prev < maxEnergy) return prev + 1;
+        if (prev < maxEnergy) {
+          const next = prev + 1;
+          localStorage.setItem('energy', next);
+          return next;
+        }
         return prev;
       });
     }, 60000);
     return () => clearInterval(regenInterval);
-  }, [maxEnergy, user]);
+  }, [maxEnergy]);
 
-  // Получение профиля из Telegram WebApp
-  useEffect(() => {
-    if (window.Telegram?.WebApp) {
-      const tg = window.Telegram.WebApp;
-      const profile = tg.initDataUnsafe?.user || null;
-      setUser(profile);
-      tg.ready(); // опционально — сообщаем клиенту что всё готово
-    } else {
-      // Для отладки или запуска вне Telegram
-      setUser(null);
-    }
-  }, []);
+  // Сохраняем стейты в localStorage
+  useEffect(() => localStorage.setItem('caps', caps), [caps]);
+  useEffect(() => localStorage.setItem('clickValue', clickValue), [clickValue]);
+  useEffect(() => localStorage.setItem('autoClicker', autoClicker), [autoClicker]);
+  useEffect(() => localStorage.setItem('energy', energy), [energy]);
+  useEffect(() => localStorage.setItem('maxEnergy', maxEnergy), [maxEnergy]);
+  useEffect(() => localStorage.setItem('clickLevel', clickLevel), [clickLevel]);
+  useEffect(() => localStorage.setItem('energyLevel', energyLevel), [energyLevel]);
 
   function handleClick() {
     if (energy > 0) {
@@ -150,19 +128,18 @@ function App() {
     }
   }
 
+  if (!user) {
+    return (
+      <div className="app" style={{padding: '2rem', textAlign: 'center'}}>
+        <p style={{color: '#f33', fontWeight: 'bold'}}>
+          Пожалуйста, откройте игру через Telegram WebApp для сохранения прогресса.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
-      {/* Приветствие пользователя */}
-      <div style={{ marginBottom: '10px', fontSize: '1rem', color: '#00e6a8' }}>
-        {user ? (
-          <>
-            Привет, {user.first_name} {user.last_name || ''} {user.username ? `( @${user.username} )` : ''}
-          </>
-        ) : (
-          <>Пожалуйста, откройте игру через Telegram WebApp для сохранения прогресса.</>
-        )}
-      </div>
-
       {/* Нижняя панель вкладок */}
       <nav className="bottom-tabs">
         {Object.values(TABS).map(t => (
