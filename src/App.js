@@ -22,7 +22,7 @@ function App() {
   const [boostsModalOpen, setBoostsModalOpen] = useState(false);
 
   useEffect(() => {
-    const tg = (window as any).Telegram?.WebApp;
+    const tg = window.Telegram?.WebApp;
 
     if (tg) {
       tg.ready();
@@ -34,14 +34,12 @@ function App() {
         console.warn('User not found in initDataUnsafe');
       }
 
-      // Доп. пример: можно слушать изменения темы
       tg.onEvent?.('themeChanged', () => {
         document.body.setAttribute('data-theme', tg.themeParams?.theme || 'default');
       });
     } else {
       console.warn('Telegram API не найден');
 
-      // В DEV-режиме подставляем фейкового пользователя
       if (process.env.NODE_ENV === 'development') {
         setUser({
           id: 1,
@@ -103,7 +101,7 @@ function App() {
     }
   }
 
-  function buyUpgrade(id: string) {
+  function buyUpgrade(id) {
     if (id === 'clickUpgrade' && caps >= 100 * clickLevel) {
       setCaps(caps - 100 * clickLevel);
       setClickValue(prev => prev + 1);
@@ -133,7 +131,6 @@ function App() {
 
   return (
     <div className="app">
-      {/* Вкладки */}
       <nav className="bottom-tabs">
         {Object.values(TABS).map(t => (
           <button
@@ -146,7 +143,6 @@ function App() {
         ))}
       </nav>
 
-      {/* Контент */}
       {tab === TABS.GAME && (
         <>
           <div className="top-bar">
