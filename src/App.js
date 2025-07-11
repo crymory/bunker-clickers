@@ -163,7 +163,7 @@ function App() {
     <div className="boost-icon">💥</div>
     <div className="boost-info">
       <h4>Улучшенный клик</h4>
-      <p>Ур. {clickLevel} — +{clickLevel} к клику</p>
+      <p>Уровень: {clickLevel} — +{clickLevel} к силе клика</p>
     </div>
     <button
       onClick={() => buyUpgrade('clickUpgrade')}
@@ -177,7 +177,7 @@ function App() {
     <div className="boost-icon">🤖</div>
     <div className="boost-info">
       <h4>Автокликер</h4>
-      <p>+1 капса / 2с</p>
+      <p>+1 капса каждые 2 секунды</p>
     </div>
     <button
       onClick={() => buyUpgrade('autoClicker')}
@@ -191,7 +191,7 @@ function App() {
     <div className="boost-icon">⚡</div>
     <div className="boost-info">
       <h4>Энергия</h4>
-      <p>Ур. {energyLevel} — +{energyLevel * 10} к макс.</p>
+      <p>Уровень: {energyLevel} — +{energyLevel * 10} к максимуму энергии</p>
     </div>
     <button
       onClick={() => buyUpgrade('energyBoost')}
