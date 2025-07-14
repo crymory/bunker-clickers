@@ -327,3 +327,32 @@ body {
   text-shadow: 0 0 8px #00ffc3;
   transform: scale(1.2);
 }
+
+/* === preloader === */
+.preloader, .spinner {
+  display: flex; justify-content: center; align-items: center;
+}
+.preloader {
+  position: fixed; inset: 0; background: #0f2027; color: #00ffc3;
+  flex-direction: column; gap: 20px; z-index: 999;
+}
+.spinner {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 6px solid #00ffc380; border-top-color: #00ffc3;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* === офлайн-модалка === */
+.offline-modal {
+  background: #203a43; padding: 1.5rem 2rem; border-radius: 16px;
+  text-align: center; color: #fff; max-width: 320px; width: 100%;
+  box-shadow: 0 0 20px #00ffc360; animation: fadeInModal 0.3s ease-out;
+}
+.offline-modal .big { font-size: 2rem; font-weight: 700; color: #00ffc3; }
+.offline-modal button {
+  margin-top: 1rem; background:#00e6a8; border:none; padding:8px 20px;
+  border-radius:12px; cursor:pointer; font-weight:600; color:#000;
+}
+.offline-modal button:hover { background:#00ffc3; }
+
