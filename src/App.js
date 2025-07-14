@@ -1,64 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-/* --- константы --- */
 const TABS = { GAME: 'game', SHOP: 'shop', STATS: 'stats' };
-const AUTO_INTERVAL = 2000;           // автоклик: 1 капса / 2 с
-const OFFLINE_THRESHOLD = 60 * 60e3;  // офлайн-модалка после 1 ч
+const AUTO_INTERVAL = 2000;          // автоклик: 1 капса / 2 с
+const OFFLINE_THRESHOLD = 60 * 60e3; // офлайн-модалка после 1 ч
 
-/* --- хелперы --- */
-const num = key => parseInt(localStorage.getItem(key) || '0', 10);
+/* ---------- ACHIEVEMENTS ---------- */
+const ACHIEVEMENTS = [
+  { id: 'firstClick',   text: 'Первый клик!',            check: s => s.clicks >= 1        },
+  { id: 'caps1k',       text: '1000 капс!',              check: s => s.caps  >= 1000     },
+  { id: 'auto',         text: 'Разблокируй автокликер',  check: s => s.autoClicker       },
+  { id: 'clickLvl5',    text: 'Клик LVL 5',              check: s => s.clickLevel >= 5   },
+  { id: 'energyLvl5',   text: 'Энергия LVL 5',           check: s => s.energyLevel >= 5  },
+];
 
-function App() {
-  /* ---------- состояние ---------- */
+/* ---------- helpers ---------- */
+const num = k => parseInt(localStorage.getItem(k) || '0', 10);
+
+export default function App() {
+  /* ---------- state ---------- */
   const [loading, setLoading] = useState(true);
 
-  const [tab, setTab]           = useState(TABS.GAME);
-  const [caps, setCaps]         = useState(() => num('caps'));
+  const [tab, setTab]               = useState(TABS.GAME);
+  const [caps, setCaps]             = useState(() => num('caps'));
+  const [clicks, setClicks]         = useState(() => num('clicks'));
   const [clickValue, setClickValue] = useState(() => num('clickValue') || 1);
   const [autoClicker, setAutoClicker] = useState(() => localStorage.getItem('autoClicker') === 'true');
-  const [energy, setEnergy]     = useState(() => num('energy') || 20);
-  const [maxEnergy, setMaxEnergy] = useState(() => num('maxEnergy') || 20);
+  const [energy, setEnergy]         = useState(() => num('energy') || 20);
+  const [maxEnergy, setMaxEnergy]   = useState(() => num('maxEnergy') || 20);
   const [clickLevel, setClickLevel] = useState(() => num('clickLevel') || 1);
   const [energyLevel, setEnergyLevel] = useState(() => num('energyLevel') || 1);
 
   const [clickGains, setClickGains] = useState([]);
   const [boostsModal, setBoostsModal] = useState(false);
 
-  const [showOfflineModal, setShowOfflineModal] = useState(false);
   const [offlineEarned, setOfflineEarned] = useState(0);
+  const [offlineModal, setOfflineModal]   = useState(false);
 
-  /* ---------- прелоадер + офлайн-фарм ---------- */
+  /* ---------- DAILY REWARD ---------- */
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800);   // имитация загрузки
+    const today = new Date().toDateString();
+    const last = localStorage.getItem('lastLogin');
+    if (last !== today) {
+      const reward = 20 + Math.floor(Math.random() * 10);   // 20-29 капс
+      setCaps(p => {
+        const next = p + reward;
+        localStorage.setItem('caps', next);
+        return next;
+      });
+      localStorage.setItem('lastLogin', today);
+      setTimeout(() => alert(`🎁 Награда за вход: +${reward} капс`), 300); // чтобы не перекрывала прелоадер
+    }
+  }, []);
 
-    /* офлайн-калькуляция */
+  /* ---------- preloader + offline farm ---------- */
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+
     const lastVisit = parseInt(localStorage.getItem('lastVisit') || Date.now(), 10);
     const delta = Date.now() - lastVisit;
 
     if (autoClicker && delta > AUTO_INTERVAL) {
       const earned = Math.floor(delta / AUTO_INTERVAL);
-      if (earned > 0) {
-        setCaps(prev => {
-          const next = prev + earned;
+      if (earned) {
+        setCaps(p => {
+          const next = p + earned;
           localStorage.setItem('caps', next);
           return next;
         });
         setOfflineEarned(earned);
-        if (delta >= OFFLINE_THRESHOLD) setShowOfflineModal(true);
+        if (delta >= OFFLINE_THRESHOLD) setOfflineModal(true);
       }
     }
-
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* ---------- онлайн-автоклик ---------- */
+  /* ---------- online autoclick ---------- */
   useEffect(() => {
     if (!autoClicker) return;
     const id = setInterval(() => {
-      setCaps(prev => {
-        const next = prev + 1;
+      setCaps(p => {
+        const next = p + 1;
         localStorage.setItem('caps', next);
         return next;
       });
@@ -66,59 +88,74 @@ function App() {
     return () => clearInterval(id);
   }, [autoClicker]);
 
-  /* ---------- реген энергии ---------- */
+  /* ---------- energy regen ---------- */
   useEffect(() => {
     const id = setInterval(() => {
-      setEnergy(prev => {
-        if (prev < maxEnergy) {
-          const next = prev + 1;
+      setEnergy(p => {
+        if (p < maxEnergy) {
+          const next = p + 1;
           localStorage.setItem('energy', next);
           return next;
         }
-        return prev;
+        return p;
       });
     }, 60_000);
     return () => clearInterval(id);
   }, [maxEnergy]);
 
-  /* ---------- запись всех стейтов ---------- */
+  /* ---------- save all ---------- */
   useEffect(() => {
-    localStorage.setItem('caps', caps);
-    localStorage.setItem('clickValue', clickValue);
-    localStorage.setItem('autoClicker', autoClicker);
-    localStorage.setItem('energy', energy);
-    localStorage.setItem('maxEnergy', maxEnergy);
-    localStorage.setItem('clickLevel', clickLevel);
-    localStorage.setItem('energyLevel', energyLevel);
-  }, [caps, clickValue, autoClicker, energy, maxEnergy, clickLevel, energyLevel]);
+    const save = () => {
+      localStorage.setItem('caps', caps);
+      localStorage.setItem('clicks', clicks);
+      localStorage.setItem('clickValue', clickValue);
+      localStorage.setItem('autoClicker', autoClicker);
+      localStorage.setItem('energy', energy);
+      localStorage.setItem('maxEnergy', maxEnergy);
+      localStorage.setItem('clickLevel', clickLevel);
+      localStorage.setItem('energyLevel', energyLevel);
+    };
+    save();
+  }, [caps, clicks, clickValue, autoClicker, energy, maxEnergy, clickLevel, energyLevel]);
 
-  /* ---------- запоминаем время ухода ---------- */
+  /* ---------- remember last visit ---------- */
   useEffect(() => {
-    const saveVisit = () => {
+    const handler = () => {
       if (document.visibilityState === 'hidden') {
         localStorage.setItem('lastVisit', Date.now());
       }
     };
-    window.addEventListener('visibilitychange', saveVisit);
-    window.addEventListener('beforeunload', saveVisit);
+    window.addEventListener('visibilitychange', handler);
+    window.addEventListener('beforeunload', handler);
     return () => {
-      window.removeEventListener('visibilitychange', saveVisit);
-      window.removeEventListener('beforeunload', saveVisit);
+      window.removeEventListener('visibilitychange', handler);
+      window.removeEventListener('beforeunload', handler);
     };
   }, []);
 
-  /* ---------- клик по бомбе ---------- */
+  /* ---------- ACHIEVEMENT check ---------- */
+  useEffect(() => {
+    const unlocked = JSON.parse(localStorage.getItem('achievements') || '[]');
+    const state = { caps, clicks, autoClicker, clickLevel, energyLevel };
+    const newly = ACHIEVEMENTS.filter(a => a.check(state) && !unlocked.includes(a.id));
+    if (newly.length) {
+      newly.forEach(a => alert(`🏅 Достижение: ${a.text}`));
+      localStorage.setItem('achievements', JSON.stringify([...unlocked, ...newly.map(a => a.id)]));
+    }
+  }, [caps, clicks, autoClicker, clickLevel, energyLevel]);
+
+  /* ---------- handlers ---------- */
   function handleClick() {
     if (!energy) return alert('Недостаточно энергии!');
     setCaps(p => p + clickValue);
     setEnergy(p => p - 1);
+    setClicks(c => c + 1);
 
     const id = Date.now() + Math.random();
     setClickGains(p => [...p, { id, text: `+${clickValue}` }]);
     setTimeout(() => setClickGains(p => p.filter(g => g.id !== id)), 800);
   }
 
-  /* ---------- покупки ---------- */
   function buyUpgrade(id) {
     const cost = {
       clickUpgrade: 100 * clickLevel,
@@ -126,8 +163,7 @@ function App() {
       energyBoost: 150 * energyLevel,
     }[id];
 
-    if (caps < cost) return alert('Недостаточно капс!');
-
+    if (caps < cost) return alert('Недостаточно капс');
     setCaps(p => p - cost);
 
     if (id === 'clickUpgrade') {
@@ -142,7 +178,10 @@ function App() {
     }
   }
 
-  /* ---------- UI-часть ---------- */
+  /* ---------- progress to next 1000 caps ---------- */
+  const progress = (caps % 1000) / 1000 * 100;
+
+  /* ---------- UI ---------- */
   if (loading) {
     return (
       <div className="preloader">
@@ -153,7 +192,7 @@ function App() {
 
   return (
     <div className="app">
-      {/* нижние вкладки */}
+      {/* bottom tabs */}
       <nav className="bottom-tabs">
         {Object.values(TABS).map(t => (
           <button key={t}
@@ -164,19 +203,20 @@ function App() {
         ))}
       </nav>
 
-      {/* --- GAME --- */}
+      {/* GAME */}
       {tab === TABS.GAME && (
         <>
           <div className="top-bar">
             <button className="boosts-toggle-button" onClick={() => setBoostsModal(true)}>
               Бусты
             </button>
-            <div className="energy" title="Энергия">
-              🔋 {energy}/{maxEnergy}
-            </div>
+            <div className="energy">🔋 {energy}/{maxEnergy}</div>
           </div>
 
           <div className="counter">{caps.toLocaleString('ru-RU')}</div>
+
+          {/* progress bar */}
+          <div className="progress-bar"><div style={{ width: `${progress}%` }} /></div>
 
           <div className="click-button-container">
             <button className="click-button"
@@ -191,11 +231,12 @@ function App() {
         </>
       )}
 
-      {/* --- SHOP / STATS --- */}
+      {/* SHOP / STATS */}
       {tab === TABS.SHOP && <div className="shop"><p>Магазин будет позже 🙂</p></div>}
       {tab === TABS.STATS && (
         <div className="stats">
-          <p>Всего капс: {caps.toLocaleString('ru-RU')}</p>
+          <p>Капс: {caps.toLocaleString('ru-RU')}</p>
+          <p>Кликов: {clicks.toLocaleString('ru-RU')}</p>
           <p>Сила клика: x{clickValue}</p>
           <p>Автокликер: {autoClicker ? 'Вкл.' : 'Выкл.'}</p>
           <p>Энергия: {energy}/{maxEnergy}</p>
@@ -204,77 +245,68 @@ function App() {
         </div>
       )}
 
-      {/* --- модалка бустов --- */}
+      {/* BOOSTS modal */}
       {boostsModal && (
         <div className="modal-overlay" onClick={() => setBoostsModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <h2>Бусты</h2>
 
             <div className="boosts">
-              {/* click */}
+              {/* click upgrade */}
               <div className="boost-card">
                 <div className="boost-icon">💥</div>
                 <div className="boost-info">
                   <h4>Улучшенный клик</h4>
-                  <p>Уровень: {clickLevel} • +{clickLevel} к силе клика</p>
+                  <p>Уровень {clickLevel} • +{clickLevel} к силе</p>
                 </div>
-                <button
-                  onClick={() => buyUpgrade('clickUpgrade')}
-                  disabled={caps < 100 * clickLevel}>
+                <button onClick={() => buyUpgrade('clickUpgrade')}
+                        disabled={caps < 100 * clickLevel}>
                   {100 * clickLevel} капс
                 </button>
               </div>
 
-              {/* auto */}
+              {/* auto clicker */}
               <div className="boost-card">
                 <div className="boost-icon">🤖</div>
-                <div className="boost-info">
-                  <h4>Автокликер</h4>
-                  <p>+1 капса каждые 2 с</p>
-                </div>
-                <button
-                  onClick={() => buyUpgrade('autoClicker')}
-                  disabled={autoClicker || caps < 250}>
+                <div className="boost-info"><h4>Автокликер</h4><p>+1 капса / 2 с</p></div>
+                <button onClick={() => buyUpgrade('autoClicker')}
+                        disabled={autoClicker || caps < 250}>
                   {autoClicker ? 'Куплено ✅' : '250 капс'}
                 </button>
               </div>
 
-              {/* energy */}
+              {/* energy boost */}
               <div className="boost-card">
                 <div className="boost-icon">⚡</div>
                 <div className="boost-info">
                   <h4>Энергия</h4>
-                  <p>Уровень: {energyLevel} • +{energyLevel * 10} к максимуму энергии</p>
+                  <p>Уровень {energyLevel} • +{energyLevel*10} к максимуму</p>
                 </div>
-                <button
-                  onClick={() => buyUpgrade('energyBoost')}
-                  disabled={caps < 150 * energyLevel}>
+                <button onClick={() => buyUpgrade('energyBoost')}
+                        disabled={caps < 150 * energyLevel}>
                   {150 * energyLevel} капс
                 </button>
               </div>
             </div>
 
-            <button className="modal-close-button"
-                    onClick={() => setBoostsModal(false)}>
+            <button className="modal-close-button" onClick={() => setBoostsModal(false)}>
               Закрыть
             </button>
           </div>
         </div>
       )}
 
-      {/* --- офлайн-модалка --- */}
-      {showOfflineModal && (
-        <div className="modal-overlay" onClick={() => setShowOfflineModal(false)}>
+      {/* OFFLINE modal */}
+      {offlineModal && (
+        <div className="modal-overlay" onClick={() => setOfflineModal(false)}>
           <div className="offline-modal" onClick={e => e.stopPropagation()}>
             <h3>Автокликер трудился!</h3>
             <p>Пока вас не было, добыто:</p>
-            <p className="big">{offlineEarned.toLocaleString('ru-RU')} капс 💰</p>
-            <button onClick={() => setShowOfflineModal(false)}>Класс!</button>
+            <p className="big">{offlineEarned.toLocaleString('ru-RU')} капс</p>
+            <button onClick={() => setOfflineModal(false)}>Круто!</button>
           </div>
         </div>
       )}
     </div>
   );
 }
-
-export default App;
